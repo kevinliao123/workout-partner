@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">WorkoutPartner</string>
+
+    <!--Main page-->
+    <string name="label_friend_list">Friend\nList</string>
 </resources>
