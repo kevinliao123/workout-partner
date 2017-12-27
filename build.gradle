@@ -3,6 +3,7 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
@@ -15,12 +16,29 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven{
-            url "https://maven.google.com"
-        }
+        google()
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    // Sdk and tools
+    // Support library and architecture components support minSdk 14 and above.
+    minSdkVersion = 18
+    targetSdkVersion = 27
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.2'
+
+    // App dependencies
+    supportLibraryVersion = '27.0.2'
+    stethoVersion = '1.4.2'
+    butterknifeVersion = '8.8.1'
+    junitVersion = '4.12'
+    mockitoVersion = '2.7.22'
+    hamcrestVersion = '1.3'
+    runnerVersion = '1.0.1'
+    rulesVersion = '1.0.1'
 }
