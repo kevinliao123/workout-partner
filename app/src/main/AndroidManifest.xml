@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.MainActivity"/>
+        <activity android:name=".main.MainActivity"/>
         <activity android:name=".search.SearchActivity"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
