@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">WorkoutPartner</string>
+    <string name="token_key">token</string>
+    <string name="ok_button">OK</string>
 
     <!--Main page-->
     <string name="label_friend_list">Friend\nList</string>
@@ -8,10 +10,28 @@
     <string name="facebook_login_protocol_scheme" translatable="false">fb742709525926947</string>
     <string name="twitter_consumer_key" translatable="false">eG68Wx8v0vQW0sQUCNIkkycke</string>
     <string name="twitter_consumer_secret" translatable="false">JRijmir1JJDwZzJ7uBmPKPNNqYMdiFpZXLF0Xz7mTjeNNLXqlE</string>
+    <string name="nearby_api_key">AIzaSyChSwXvJv02V2LySE6w45ef4CordHdGacU</string>
 
+    <!--Permission activity-->
+    <string-array name="array_permission_alert_title">
+        <item>Camera Permission</item>
+        <item>Location Permission</item>
+    </string-array>
+
+    <string-array name="array_permission_alert_content">
+        <item>Workout Partner needs to have camera permission to work properly</item>
+        <item>Workout Partner needs to have location permission to work properly</item>
+    </string-array>
+
+    <string name="title_go_to_setting">Allow Permission</string>
+    <string name="message_go_to_setting">Please allow the permission in the settings page</string>
+
+
+    <!--Error message-->
     <string name="unknown_response">Unexpected onActivityResult response code</string>
     <string name="unknown_sign_in_response">Unknown response from AuthUI sign-in</string>
     <string name="sign_in_cancelled">Sign in cancelled</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="unknown_error">An unknown error occurred</string>
+    <string name="error_empty_message">Enter your message before posting~!</string>
 </resources>

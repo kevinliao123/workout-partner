@@ -42,6 +42,9 @@ dependencies {
     implementation "com.google.firebase:firebase-database:$rootProject.ext.firebaseVersion"
     implementation "com.firebaseui:firebase-ui-auth:3.1.0"
     implementation "com.android.volley:volley:$rootProject.ext.vollyVersion"
+    implementation "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
+    implementation "com.squareup.picasso:picasso:$rootProject.ext.picassoVersion"
+    implementation "com.google.guava:guava:$rootProject.guavaVersion"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
