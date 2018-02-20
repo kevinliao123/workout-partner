@@ -27,8 +27,6 @@ public interface SearchContract {
 
         void setSubscribeSwitch(boolean value);
 
-        void emptyMessageEditText();
-
         void addToMessageList(UserMessage message);
 
         void removeFromMessageList(UserMessage message);

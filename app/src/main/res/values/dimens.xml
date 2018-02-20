@@ -3,6 +3,10 @@
     <!--General-->
     <dimen name="general_padding">16dp</dimen>
     <dimen name="general_margin">16dp</dimen>
+    <dimen name="general_margin_medium">24dp</dimen>
+    <dimen name="general_margin_large">32dp</dimen>
+    <dimen name="general_margin_extra_large">48dp</dimen>
+    <dimen name="general_margin_extra_extra_large">81dp</dimen>
 
     <dimen name="icon_size_small">40dp</dimen>
     <dimen name="icon_size">150dp</dimen>

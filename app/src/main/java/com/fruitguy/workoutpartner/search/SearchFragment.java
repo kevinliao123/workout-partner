@@ -1,17 +1,21 @@
 package com.fruitguy.workoutpartner.search;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -33,10 +37,10 @@ import butterknife.OnClick;
  * Created by heliao on 1/15/18.
  */
 
-public class SearchActivity extends AppCompatActivity implements SearchContract.View
+public class SearchFragment extends Fragment implements SearchContract.View
         , GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = SearchActivity.class.getSimpleName();
+    private static final String TAG = SearchFragment.class.getSimpleName();
 
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -47,34 +51,35 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     @BindView(R.id.subscribe_switch)
     SwitchCompat mSubscribeSwitch;
 
-    @BindView(R.id.publish_button)
-    Button mPublishButton;
-
-    @BindView(R.id.message_edit_text)
-    EditText mMessageEditText;
+    @BindView(R.id.post_button)
+    FloatingActionButton mPostButton;
 
     private SearchContract.Presenter mSearchPresenter;
-    private MessageListAdapter mMessageListAdatper;
+    private MessageListAdapter mMessageListAdapter;
     private GoogleApiClient mGoogleApiClient;
 
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-        ButterKnife.bind(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        ButterKnife.bind(this, rootView);
+        mPostButton.setEnabled(false);
+        mSubscribeSwitch.setEnabled(false);
+
         buildGoogleApiClient();
         initializeSearchPresenter();
         initializeRecyclerView();
+        return rootView;
     }
 
     private void buildGoogleApiClient() {
         if (mGoogleApiClient != null) {
             return;
         }
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(Nearby.MESSAGES_API)
                 .addConnectionCallbacks(this)
-                .enableAutoManage(this, this)
+                .enableAutoManage(getActivity(), this)
                 .build();
     }
 
@@ -85,14 +90,14 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     }
 
     private void initializeRecyclerView() {
-        final RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        final RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mMessageRecyclerView.setLayoutManager(mLayoutManager);
-        mMessageListAdatper = new MessageListAdapter();
-        mMessageRecyclerView.setAdapter(mMessageListAdatper);
+        mMessageListAdapter = new MessageListAdapter();
+        mMessageRecyclerView.setAdapter(mMessageListAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mMessageListAdatper.refresh();
+                mMessageListAdapter.refresh();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -109,9 +114,9 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         }
     }
 
-    @OnClick(R.id.publish_button)
-    public void onPublishButtonClicked(View view) {
-        mSearchPresenter.publish(mMessageEditText.getText().toString());
+    @OnClick(R.id.post_button)
+    public void onPostButtonClicked(View view) {
+        showChangeLangDialog();
     }
 
     @Override
@@ -122,7 +127,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     @Override
     public void showSnackbar(final String text) {
         Log.w(TAG, text);
-        View container = findViewById(R.id.activity_search_container);
+        View container = getView().findViewById(R.id.fragment_search_container);
         Snackbar.make(container, text, Snackbar.LENGTH_LONG).show();
     }
 
@@ -132,14 +137,9 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     }
 
     private void showAlertBox(String message) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(getContext())
                 .setMessage(message)
                 .create().show();
-    }
-
-    @Override
-    public void emptyMessageEditText() {
-        mMessageEditText.getText().clear();
     }
 
     @Override
@@ -150,7 +150,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.i(TAG, "onConnectionFailed: ");
-        mPublishButton.setEnabled(false);
+        mPostButton.setEnabled(false);
         mSubscribeSwitch.setEnabled(false);
     }
 
@@ -162,26 +162,52 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.i(TAG, "GoogleApiClient connected");
+        mPostButton.setEnabled(true);
+        mSubscribeSwitch.setEnabled(true);
     }
 
     @Override
     public void addToMessageList(UserMessage message) {
-        mMessageListAdatper.add(message);
+        mMessageListAdapter.add(message);
     }
 
     @Override
     public void removeFromMessageList(UserMessage message) {
-        mMessageListAdatper.remove(message);
+        mMessageListAdapter.remove(message);
     }
 
     @Override
     public void clearAllMessage() {
-        mMessageListAdatper.clearAllMessage();
+        mMessageListAdapter.clearAllMessage();
     }
 
     @Override
     public void refreshMessage() {
-        mMessageListAdatper.refresh();
+        mMessageListAdapter.refresh();
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    public void showChangeLangDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_post, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText messageEditText = dialogView.findViewById(R.id.post_edit_text);
+
+        dialogBuilder.setTitle("Post Nearby Message");
+        dialogBuilder.setMessage("Enter text below");
+        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                mSearchPresenter.publish(messageEditText.getText().toString());
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog postDialog = dialogBuilder.create();
+        postDialog.show();
     }
 }
