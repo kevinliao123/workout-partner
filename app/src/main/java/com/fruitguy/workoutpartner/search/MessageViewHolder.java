@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fruitguy.workoutpartner.R;
-import com.fruitguy.workoutpartner.chat.ChatActivity;
+import com.fruitguy.workoutpartner.chat.ChatFragment;
 import com.fruitguy.workoutpartner.data.UserMessage;
 import com.squareup.picasso.Picasso;
 
@@ -33,7 +33,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder implements View.O
 
     public void bind(UserMessage userMessage) {
         mUserMessage = userMessage;
-        Picasso.with(mContext).load(userMessage.getImage().toString()).into(mProfileImage);
+        Picasso.with(mContext).load(userMessage.getImageUrl().toString()).into(mProfileImage);
         mMessage.setText(userMessage.getMessageBody());
         itemView.setOnClickListener(this);
     }
@@ -41,13 +41,13 @@ public class MessageViewHolder extends RecyclerView.ViewHolder implements View.O
     @Override
     public void onClick(View v) {
         Context context = itemView.getContext();
-        Intent chatIntent = new Intent(context, ChatActivity.class);
+        Intent chatIntent = new Intent(context, ChatFragment.class);
         chatIntent.putExtra(context.getString(R.string.token_key), mUserMessage.getUserToken());
         context.startActivity(chatIntent);
     }
 
-    public void setProfileImage(Uri image) {
-        Picasso.with(mContext).load(image.getPath()).into(mProfileImage);
+    public void setProfileImage(String imageUrl) {
+        Picasso.with(mContext).load(imageUrl).into(mProfileImage);
     }
 
     public void setMessage(String message) {

@@ -39,7 +39,7 @@ public class SearchPresenter implements SearchContract.Presenter, SearchInteract
             return;
         }
         UserMessage userMessage = new UserMessage(mCurrentUser.getUid()
-                , mCurrentUser.getPhotoUrl()
+                , mCurrentUser.getPhotoUrl().toString()
                 , message);
         mSearchInteractor.publish(userMessage, this);
     }
@@ -77,7 +77,6 @@ public class SearchPresenter implements SearchContract.Presenter, SearchInteract
     @Override
     public void onPublishSuccess(UserMessage message) {
         mView.addToMessageList(message);
-        mView.emptyMessageEditText();
         mView.refreshMessage();
     }
 

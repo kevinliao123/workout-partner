@@ -56,8 +56,8 @@ public class DiffUtilCallback extends DiffUtil.Callback {
             diff.putString("token", newMessage.getUserToken());
         }
 
-        if(!newMessage.getImage().equals (oldMessage.getImage())){
-            diff.putParcelable("image", newMessage.getImage());
+        if(!newMessage.getImageUrl().equals (oldMessage.getImageUrl())){
+            diff.putString("image", newMessage.getImageUrl());
         }
 
         if(!newMessage.getMessageBody().equals (oldMessage.getMessageBody())){

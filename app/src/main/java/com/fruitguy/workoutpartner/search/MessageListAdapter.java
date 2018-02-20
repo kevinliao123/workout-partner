@@ -39,7 +39,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageViewHolder> 
                 }
 
                 if (key.equals("image")) {
-                    holder.setProfileImage(mMessageList.get(position).getImage());
+                    holder.setProfileImage(mMessageList.get(position).getImageUrl());
                 }
 
                 if (key.equals("message_body")) {
@@ -60,7 +60,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageViewHolder> 
     }
 
     public void add(UserMessage message) {
-        mMessageList.add(message);
+        mMessageList.add(0, message);
     }
 
     public void remove(UserMessage message) {
