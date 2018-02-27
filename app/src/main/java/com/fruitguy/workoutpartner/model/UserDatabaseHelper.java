@@ -27,14 +27,14 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     static final String TABLE_USER = "user";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({USER_NAME, USER_GENDER, USER_AGE, USER_COMMENT, USER_PORTRAIT})
+    @StringDef({USER_NAME, USER_GENDER, USER_AGE, USER_STATUS, USER_PORTRAIT})
     public @interface UserData {
     }
 
     static final String USER_NAME = "username";
     static final String USER_GENDER = "gender";
     static final String USER_AGE = "age";
-    static final String USER_COMMENT = "comment";
+    static final String USER_STATUS = "status";
     static final String USER_PORTRAIT = "portrait";
 
     public static final int DATABASE_VERSION = 1;
@@ -63,7 +63,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 + USER_NAME + "TEXT, "
                 + USER_GENDER + "TEXT, "
                 + USER_AGE + "TEXT, "
-                + USER_COMMENT + "TEXT, "
+                + USER_STATUS + "TEXT, "
                 + USER_PORTRAIT + "BLOB" + ")";
 
         db.execSQL(CREATE_USER_TABLE);
@@ -113,7 +113,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 .setUserName(cursor.getString(cursor.getColumnIndex(USER_NAME)))
                 .setGender(cursor.getString(cursor.getColumnIndex(USER_GENDER)))
                 .setAge(cursor.getString(cursor.getColumnIndex(USER_AGE)))
-                .setComment(cursor.getString(cursor.getColumnIndex(USER_COMMENT)))
+                .setStatus(cursor.getString(cursor.getColumnIndex(USER_STATUS)))
                 .setPortrait(BitmapUtils.getImage(cursor.getBlob(cursor.getColumnIndex(USER_PORTRAIT))))
                 .create();
     }
@@ -123,7 +123,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(USER_NAME, user.getUserName());
         contentValues.put(USER_GENDER, user.getGender());
         contentValues.put(USER_AGE, user.getAge());
-        contentValues.put(USER_COMMENT, user.getComment());
+        contentValues.put(USER_STATUS, user.getStatus());
         contentValues.put(USER_PORTRAIT, BitmapUtils.getImageBytes(user.getPortrait()));
 
         return contentValues;

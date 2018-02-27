@@ -11,7 +11,8 @@ public class User {
     String mUserName;
     String mGender;
     String mAge;
-    String mComment;
+    String mWeight;
+    String mStatus;
     Bitmap mPortrait;
 
     public String getUserName() {
@@ -22,9 +23,11 @@ public class User {
         return mAge;
     }
 
-
-    public String getComment() {
-        return mComment;
+    public String getWeight() {
+        return mWeight;
+    }
+    public String getStatus() {
+        return mStatus;
     }
 
 
@@ -40,12 +43,14 @@ public class User {
     public User(String userName,
                 String gender,
                 String age,
-                String comment,
+                String weight,
+                String status,
                 Bitmap portrait) {
         mUserName = userName;
         mGender = gender;
         mAge = age;
-        mComment = comment;
+        mWeight = weight;
+        mStatus = status;
         mPortrait = portrait;
     }
 
@@ -55,7 +60,8 @@ public class User {
         String mUserName;
         String mGender;
         String mAge;
-        String mComment;
+        String mWeight;
+        String mStatus;
         Bitmap mPortrait;
 
         public UserBuilder setUserName(String userName) {
@@ -73,8 +79,13 @@ public class User {
             return this;
         }
 
-        public UserBuilder setComment(String comment) {
-            mComment = comment;
+        public UserBuilder setWeight(String weight) {
+            mWeight = weight;
+            return this;
+        }
+
+        public UserBuilder setStatus(String status) {
+            mStatus = status;
             return this;
         }
 
@@ -84,7 +95,7 @@ public class User {
         }
 
         public User create() {
-            return new User(mUserName, mGender, mAge, mComment, mPortrait);
+            return new User(mUserName, mGender, mAge, mWeight,mStatus, mPortrait);
         }
     }
 }

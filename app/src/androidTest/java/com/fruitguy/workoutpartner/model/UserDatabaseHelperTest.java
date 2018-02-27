@@ -32,7 +32,7 @@ public class UserDatabaseHelperTest  {
                 .setUserName("test")
                 .setAge("18")
                 .setGender("Male")
-                .setComment("Strong as a bull")
+                .setStatus("Strong as a bull")
                 .setPortrait(image)
                 .create();
         assertNotNull(user);
@@ -57,7 +57,7 @@ public class UserDatabaseHelperTest  {
                 .setUserName("test")
                 .setAge("21")
                 .setGender("Male")
-                .setComment("Strong as a bull")
+                .setStatus("Strong as a bull")
                 .setPortrait(BitmapUtils.readBitmap(InstrumentationRegistry.getTargetContext(), R.mipmap.ic_launcher))
                 .create();
     }
