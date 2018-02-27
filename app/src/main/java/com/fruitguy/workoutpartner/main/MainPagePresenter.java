@@ -28,4 +28,9 @@ public class MainPagePresenter implements MainPageContract.Presenter {
     public FirebaseUser getCurrentUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
+
+    @Override
+    public void signout() {
+        FirebaseAuth.getInstance().signOut();
+    }
 }

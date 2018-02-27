@@ -1,5 +1,6 @@
 package com.fruitguy.workoutpartner.authentication;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,9 @@ import android.view.View;
 
 import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.main.MainActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +33,9 @@ public class AuthenticationActivity extends AppCompatActivity implements Authent
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
         ButterKnife.bind(this);
-        mAuthenticationPresenter = new AuthenticationPresenter(this);
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        FirebaseAuth userAuthentication = FirebaseAuth.getInstance();
+        mAuthenticationPresenter = new AuthenticationPresenter(this, userAuthentication, database);
         mAuthenticationPresenter.start();
     }
 

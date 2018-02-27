@@ -50,13 +50,17 @@ public class MainActivity extends AppCompatActivity implements MainPageContract.
 
         mMainPagePresenter = new MainPagePresenter(this);
         if(!mMainPagePresenter.doesUserExist()) {
-            Intent loginIntent = new Intent(MainActivity.this, AuthenticationActivity.class);
-            startActivity(loginIntent);
-            finish();
+            navigateToAuthentication();
             return;
         }
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         user.getIdToken(true);
+    }
+
+    private void navigateToAuthentication() {
+        Intent loginIntent = new Intent(MainActivity.this, AuthenticationActivity.class);
+        startActivity(loginIntent);
+        finish();
     }
 
     @Override
@@ -72,6 +76,10 @@ public class MainActivity extends AppCompatActivity implements MainPageContract.
             case R.id.profile:
                 return true;
             case R.id.settings:
+                return true;
+            case R.id.logout:
+                mMainPagePresenter.signout();
+                navigateToAuthentication();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -2,16 +2,22 @@ package com.fruitguy.workoutpartner.authentication;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.authentication.AuthenticationContract.View;
+import com.fruitguy.workoutpartner.constant.FirebaseConstant;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -26,9 +32,15 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
 
     private boolean mIsSignInSuccessful;
     View mView;
+    DatabaseReference mDatabase;
+    FirebaseAuth mUserAuthentication;
 
-    AuthenticationPresenter(View view) {
+    AuthenticationPresenter(View view
+            , FirebaseAuth userAuthentication
+            , DatabaseReference database) {
         mView = view;
+        mUserAuthentication = userAuthentication;
+        mDatabase= database;
         mView.setPresenter(this);
     }
 
@@ -37,6 +49,7 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
         ((Activity) mView).startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
+                        .setIsSmartLockEnabled(false, true)
                         .setAvailableProviders(createProviderList())
                         .build(),
                 RC_SIGN_IN);
@@ -61,8 +74,7 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
 
         // Successfully signed in
         if (resultCode == RESULT_OK) {
-            mView.startMainActivity();
-            mView.finishActivity();
+            addUser();
             return;
         } else {
             // Sign in failed
@@ -87,9 +99,35 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
         mView.showSnackbar(R.string.unknown_sign_in_response);
     }
 
+    private void addUser() {
+        final FirebaseUser user = getCurrentUser();
+        mDatabase = mDatabase.child(FirebaseConstant.USER_NODE).child(user.getUid());
+        HashMap<String, String> userMap = getUserMap(user);
+        mDatabase.setValue(userMap).addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                mView.startMainActivity();
+                mView.finishActivity();
+            }
+        });
+    }
+
+    private HashMap<String, String> getUserMap(FirebaseUser user) {
+        return new HashMap<String, String>() {
+            {
+                put(FirebaseConstant.USER_NAME, user.getDisplayName());
+                put(FirebaseConstant.USER_GENDER, "male");
+                put(FirebaseConstant.USER_AGE, "18");
+                put(FirebaseConstant.USER_WEIGHT, "150");
+                put(FirebaseConstant.USER_STATUS, "this is workout partner");
+                put(FirebaseConstant.USER_IMAGE, user.getPhotoUrl().toString());
+                put(FirebaseConstant.USER_THUMB_NAIL, user.getPhotoUrl().toString());
+            }
+        };
+    }
+
     @Override
     public FirebaseUser getCurrentUser() {
-        return FirebaseAuth.getInstance().getCurrentUser();
+        return mUserAuthentication.getCurrentUser();
     }
 
     @Override

@@ -13,7 +13,8 @@ public class User {
     String mAge;
     String mWeight;
     String mStatus;
-    Bitmap mPortrait;
+    String mImage;
+    String mThumbNail;
 
     public String getUserName() {
         return mUserName;
@@ -31,8 +32,12 @@ public class User {
     }
 
 
-    public Bitmap getPortrait() {
-        return mPortrait;
+    public String getImage() {
+        return mImage;
+    }
+
+    public String getThumbNail() {
+        return mThumbNail;
     }
 
 
@@ -45,13 +50,15 @@ public class User {
                 String age,
                 String weight,
                 String status,
-                Bitmap portrait) {
+                String image,
+                String thumbNail) {
         mUserName = userName;
         mGender = gender;
         mAge = age;
         mWeight = weight;
         mStatus = status;
-        mPortrait = portrait;
+        mImage = image;
+        mThumbNail = thumbNail;
     }
 
 
@@ -62,7 +69,8 @@ public class User {
         String mAge;
         String mWeight;
         String mStatus;
-        Bitmap mPortrait;
+        String mImage;
+        String mThumbNail;
 
         public UserBuilder setUserName(String userName) {
             mUserName = userName;
@@ -89,13 +97,18 @@ public class User {
             return this;
         }
 
-        public UserBuilder setPortrait(Bitmap portrait) {
-            mPortrait = portrait;
+        public UserBuilder setImage(String image) {
+            mImage = image;
+            return this;
+        }
+
+        public UserBuilder setThumbNail(String thumbNail) {
+            mThumbNail = thumbNail;
             return this;
         }
 
         public User create() {
-            return new User(mUserName, mGender, mAge, mWeight,mStatus, mPortrait);
+            return new User(mUserName, mGender, mAge, mWeight,mStatus, mImage, mThumbNail);
         }
     }
 }

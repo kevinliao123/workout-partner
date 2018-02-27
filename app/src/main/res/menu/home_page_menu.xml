@@ -17,6 +17,11 @@
                 android:icon="@drawable/ic_chest_bench"
                 android:title="@string/profile" />
 
+            <item
+                android:id="@+id/logout"
+                android:icon="@drawable/ic_person"
+                android:title="@string/logout" />
+
         </menu>
     </item>
 </menu>

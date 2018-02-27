@@ -17,6 +17,8 @@ public interface MainPageContract {
         boolean doesUserExist();
 
         FirebaseUser getCurrentUser();
+
+        void signout();
     }
 
 

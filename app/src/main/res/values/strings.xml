@@ -7,6 +7,7 @@
     <string name="label_friend_list">Friend\nList</string>
     <string name="profile">Profile</string>
     <string name="setting">Settings</string>
+    <string name="logout">Log Out</string>
 
     <string name="facebook_application_id" translatable="false">742709525926947</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb742709525926947</string>
