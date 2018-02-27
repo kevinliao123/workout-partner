@@ -12,7 +12,6 @@ import android.os.Message;
 import android.support.annotation.StringDef;
 
 import com.fruitguy.workoutpartner.data.User;
-import com.fruitguy.workoutpartner.util.BitmapUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -27,20 +26,23 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     static final String TABLE_USER = "user";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({USER_NAME, USER_GENDER, USER_AGE, USER_STATUS, USER_PORTRAIT})
+    @StringDef({USER_NAME, USER_GENDER, USER_AGE, USER_WEIGHT
+            , USER_STATUS, USER_IMAGE, USER_THUMB_NAIL})
     public @interface UserData {
     }
 
-    static final String USER_NAME = "username";
+    static final String USER_NAME = "name";
     static final String USER_GENDER = "gender";
-    static final String USER_AGE = "age";
+    static final String USER_AGE = "weight";
+    static final String USER_WEIGHT = "age";
     static final String USER_STATUS = "status";
-    static final String USER_PORTRAIT = "portrait";
+    static final String USER_IMAGE = "image";
+    static final String USER_THUMB_NAIL = "thumbNail";
 
     public static final int DATABASE_VERSION = 1;
 
     private static UserDatabaseHelper mInstance;
-    Handler mHander;
+    Handler mHandler;
 
     public static UserDatabaseHelper getInstance(Context context) {
         if (mInstance == null) {
@@ -53,7 +55,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         HandlerThread ht = new HandlerThread("UserDatabaseThread");
         ht.start();
-        mHander = new UserDatabaseHandler(ht.getLooper());
+        mHandler = new UserDatabaseHandler(ht.getLooper());
 
     }
 
@@ -63,8 +65,11 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 + USER_NAME + "TEXT, "
                 + USER_GENDER + "TEXT, "
                 + USER_AGE + "TEXT, "
+                + USER_WEIGHT + "TEXT, "
                 + USER_STATUS + "TEXT, "
-                + USER_PORTRAIT + "BLOB" + ")";
+                + USER_IMAGE + "TEXT,"
+                + USER_THUMB_NAIL + "TEXT"
+                + ")";
 
         db.execSQL(CREATE_USER_TABLE);
 
@@ -76,11 +81,11 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void addUser(User user) {
-        mHander.obtainMessage(UserHandlerMessage.ADD_USER.ordinal(), user).sendToTarget();
+        mHandler.obtainMessage(UserHandlerMessage.ADD_USER.ordinal(), user).sendToTarget();
     }
 
     public void updateUser(User user) {
-        mHander.obtainMessage(UserHandlerMessage.UPDATE_USER.ordinal(), user).sendToTarget();
+        mHandler.obtainMessage(UserHandlerMessage.UPDATE_USER.ordinal(), user).sendToTarget();
     }
 
     public User retrieveUser() {
@@ -114,7 +119,8 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 .setGender(cursor.getString(cursor.getColumnIndex(USER_GENDER)))
                 .setAge(cursor.getString(cursor.getColumnIndex(USER_AGE)))
                 .setStatus(cursor.getString(cursor.getColumnIndex(USER_STATUS)))
-                .setPortrait(BitmapUtils.getImage(cursor.getBlob(cursor.getColumnIndex(USER_PORTRAIT))))
+                .setImage(cursor.getString(cursor.getColumnIndex(USER_IMAGE)))
+                .setThumbNail(cursor.getString(cursor.getColumnIndex(USER_THUMB_NAIL)))
                 .create();
     }
 
@@ -123,8 +129,10 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(USER_NAME, user.getUserName());
         contentValues.put(USER_GENDER, user.getGender());
         contentValues.put(USER_AGE, user.getAge());
+        contentValues.put(USER_WEIGHT, user.getWeight());
         contentValues.put(USER_STATUS, user.getStatus());
-        contentValues.put(USER_PORTRAIT, BitmapUtils.getImageBytes(user.getPortrait()));
+        contentValues.put(USER_IMAGE, user.getImage());
+        contentValues.put(USER_THUMB_NAIL, user.getImage());
 
         return contentValues;
     }

@@ -33,7 +33,8 @@ public class UserDatabaseHelperTest  {
                 .setAge("18")
                 .setGender("Male")
                 .setStatus("Strong as a bull")
-                .setPortrait(image)
+                .setImage("image_link")
+                .setThumbNail("default")
                 .create();
         assertNotNull(user);
         helper.addUser(user);
@@ -58,7 +59,8 @@ public class UserDatabaseHelperTest  {
                 .setAge("21")
                 .setGender("Male")
                 .setStatus("Strong as a bull")
-                .setPortrait(BitmapUtils.readBitmap(InstrumentationRegistry.getTargetContext(), R.mipmap.ic_launcher))
+                .setImage("image link")
+                .setThumbNail("default")
                 .create();
     }
 
