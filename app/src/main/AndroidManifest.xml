@@ -4,12 +4,16 @@
     package="com.fruitguy.workoutpartner">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_chest_bench"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_chest_bench_round"
         android:supportsRtl="true"
+        android:name=".WorkoutApplication"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -32,6 +36,14 @@
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
+
+        <activity android:name=".profile.ProfileActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>

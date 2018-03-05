@@ -37,4 +37,9 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="unknown_error">An unknown error occurred</string>
     <string name="error_empty_message">Enter your message before posting~!</string>
+
+    <string-array name="gender">
+        <item>male</item>
+        <item>female</item>
+    </string-array>
 </resources>

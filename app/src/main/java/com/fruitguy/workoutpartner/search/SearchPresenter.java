@@ -28,6 +28,16 @@ public class SearchPresenter implements SearchContract.Presenter, SearchInteract
     }
 
     @Override
+    public void takeView(Object view) {
+
+    }
+
+    @Override
+    public void dropView() {
+
+    }
+
+    @Override
     public void subscribe() {
         mSearchInteractor.subscribe(this);
     }

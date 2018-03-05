@@ -15,8 +15,10 @@ import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.authentication.AuthenticationActivity;
 import com.fruitguy.workoutpartner.chat.ChatFragment;
 import com.fruitguy.workoutpartner.friendlist.FriendListFragment;
+import com.fruitguy.workoutpartner.profile.ProfileActivity;
 import com.fruitguy.workoutpartner.request.RequestFragment;
 import com.fruitguy.workoutpartner.search.SearchFragment;
+import com.fruitguy.workoutpartner.util.PermissionUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -57,6 +59,15 @@ public class MainActivity extends AppCompatActivity implements MainPageContract.
         user.getIdToken(true);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        List<String> permissionList = PermissionUtil.checkPermissions(this);
+        if(permissionList.size()>0) {
+            PermissionUtil.requestPermissions(this, permissionList);
+        }
+    }
+
     private void navigateToAuthentication() {
         Intent loginIntent = new Intent(MainActivity.this, AuthenticationActivity.class);
         startActivity(loginIntent);
@@ -74,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements MainPageContract.
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.profile:
+                startActivity(new Intent(this, ProfileActivity.class));
                 return true;
             case R.id.settings:
                 return true;

@@ -2,7 +2,6 @@ package com.fruitguy.workoutpartner.authentication;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -10,8 +9,6 @@ import com.firebase.ui.auth.IdpResponse;
 import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.authentication.AuthenticationContract.View;
 import com.fruitguy.workoutpartner.constant.FirebaseConstant;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -53,6 +50,16 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
                         .setAvailableProviders(createProviderList())
                         .build(),
                 RC_SIGN_IN);
+    }
+
+    @Override
+    public void takeView(Object view) {
+
+    }
+
+    @Override
+    public void dropView() {
+
     }
 
     private List<AuthUI.IdpConfig> createProviderList() {
@@ -101,7 +108,7 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
 
     private void addUser() {
         final FirebaseUser user = getCurrentUser();
-        mDatabase = mDatabase.child(FirebaseConstant.USER_NODE).child(user.getUid());
+        mDatabase = mDatabase.child(FirebaseConstant.USER_DATABASE).child(user.getUid());
         HashMap<String, String> userMap = getUserMap(user);
         mDatabase.setValue(userMap).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {

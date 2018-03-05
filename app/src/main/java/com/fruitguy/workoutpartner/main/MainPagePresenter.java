@@ -20,6 +20,16 @@ public class MainPagePresenter implements MainPageContract.Presenter {
     }
 
     @Override
+    public void takeView(Object view) {
+
+    }
+
+    @Override
+    public void dropView() {
+
+    }
+
+    @Override
     public boolean doesUserExist() {
         return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
