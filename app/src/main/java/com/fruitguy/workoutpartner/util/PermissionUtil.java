@@ -28,7 +28,7 @@ public class PermissionUtil {
     public static List<String> checkPermissions(Activity context) {
         String[] listPermissionsMissing = new String[] {
                 PERMISSION_READ_EXTERNAL_STORAGE,
-                PERMISSION_WRITE_EXTERNAL_STORAGE
+                PERMISSION_WRITE_EXTERNAL_STORAGE,
         };
 
         return checkPermissions(context, listPermissionsMissing);

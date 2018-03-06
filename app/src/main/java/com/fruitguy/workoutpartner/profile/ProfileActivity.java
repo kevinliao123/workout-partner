@@ -1,11 +1,13 @@
 package com.fruitguy.workoutpartner.profile;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,11 +18,12 @@ import android.widget.TextView;
 
 import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.data.User;
-import com.google.firebase.auth.FirebaseAuth;
+import com.fruitguy.workoutpartner.util.PermissionUtil;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -39,6 +42,7 @@ public class ProfileActivity extends DaggerAppCompatActivity implements ProfileC
 
     private static final String TAG = ProfileActivity.class.getSimpleName();
     private static final int SELECT_IMAGE = 1000;
+    public static final int CAMERA = 1001;
 
     @BindView(R.id.profile_activity_layout)
     RelativeLayout mRootView;
@@ -65,6 +69,7 @@ public class ProfileActivity extends DaggerAppCompatActivity implements ProfileC
     @Inject
     ProfileContract.Presenter mProfilePresenter;
     private ArrayAdapter<CharSequence> mSpinnerAdapter;
+    private ProgressDialog mProgessDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,6 +104,7 @@ public class ProfileActivity extends DaggerAppCompatActivity implements ProfileC
         }
 
         mProfilePresenter.handleCropImageResult(requestCode, resultCode, data);
+        mProfilePresenter.handleCameraImageResult(requestCode, resultCode, data);
     }
 
 
@@ -142,10 +148,43 @@ public class ProfileActivity extends DaggerAppCompatActivity implements ProfileC
 
     @OnClick(R.id.profile_image)
     public void onProfileImageClicked(View view) {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);//
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+        showPictureDialog();
+    }
+
+    private void showPictureDialog() {
+        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
+        pictureDialog.setTitle("Select Action");
+        String[] pictureDialogItems = {
+                "Select photo from gallery",
+                "Capture photo from camera"};
+        pictureDialog.setItems(pictureDialogItems,
+                (dialog, which) -> {
+                    List<String> permissionList = PermissionUtil.checkPermissions(ProfileActivity.this);
+                    if (permissionList.size() > 0) {
+                        PermissionUtil.requestPermissions(ProfileActivity.this, permissionList);
+                    }
+                    switch (which) {
+                        case 0:
+                            choosePhotoFromGallery();
+                            break;
+                        case 1:
+                            takePhotoFromCamera();
+                            break;
+                    }
+                }
+        );
+        pictureDialog.show();
+    }
+
+    public void choosePhotoFromGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, SELECT_IMAGE);
+    }
+
+    private void takePhotoFromCamera() {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, CAMERA);
     }
 
     @Override
@@ -157,6 +196,20 @@ public class ProfileActivity extends DaggerAppCompatActivity implements ProfileC
         mUserStatus.setText(user.getStatus());
         int position = mSpinnerAdapter.getPosition(user.getGender());
         mUserGenderSpinner.setSelection(position);
+    }
+
+    @Override
+    public void showProgressDialog() {
+        mProgessDialog = new ProgressDialog(this);
+        mProgessDialog.setTitle("Uploading....");
+        mProgessDialog.setMessage("Please wait while we upload");
+        mProgessDialog.setCanceledOnTouchOutside(false);
+        mProgessDialog.show();
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        mProgessDialog.dismiss();
     }
 
     @Override

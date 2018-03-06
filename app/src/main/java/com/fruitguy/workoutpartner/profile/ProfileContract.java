@@ -18,11 +18,16 @@ public interface ProfileContract {
 
         void handleCropImageResult(int requestCode, int resultCode, Intent data);
 
+        void handleCameraImageResult(int requestCode, int resultCode, Intent data);
     }
 
     interface View extends BaseView<Presenter> {
         void updateProfileUi(User user);
 
         void showSnackBar(String message);
+
+        void showProgressDialog();
+
+        void dismissProgressDialog();
     }
 }

@@ -11,9 +11,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Map;
-
 
 import static com.fruitguy.workoutpartner.constant.FirebaseConstant.PROFILE_IMAGE_STORAGE;
 
@@ -61,7 +61,7 @@ public class FirebaseRepository implements ValueEventListener {
         return mImageStorage.child(PROFILE_IMAGE_STORAGE);
     }
 
-    public void updateUserProfile(Map<String, String> userMap, DatabaseCallBack callBack) {
+    public void updateUserProfile(Map<String, String> userMap, UploadCallBack callBack) {
         mUserDataBase.setValue(userMap)
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()) {
@@ -72,7 +72,7 @@ public class FirebaseRepository implements ValueEventListener {
                 });
     }
 
-    public void uploadImage(Uri resultUri) {
+    public void uploadImage(Uri resultUri, UploadCallBack callBack) {
         StorageReference filePath = mImageStorage
                 .child(mUser.getUid()+".png");
         filePath.putFile(resultUri).addOnCompleteListener(task -> {
@@ -80,10 +80,21 @@ public class FirebaseRepository implements ValueEventListener {
                 Log.i(TAG, "upload image success");
                 String imageUrl = task.getResult().getDownloadUrl().toString();
                 updateImageUrl(imageUrl);
+                callBack.onSuccess();
             } else {
                 Log.i(TAG, "upload image fail");
             }
         });
+    }
+
+    public void uploadImage(byte[] data, UploadCallBack callBack) {
+        UploadTask uploadTask = mImageStorage.child(mUser.getUid() + ".png").putBytes(data);
+        uploadTask.addOnFailureListener((exception) -> Log.e(TAG, exception.getMessage()))
+                .addOnSuccessListener((taskSnapshot) -> {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    updateImageUrl(downloadUrl.toString());
+                    callBack.onSuccess();
+                });
     }
 
     public void updateImageUrl(String imageUrl) {
@@ -133,7 +144,7 @@ public class FirebaseRepository implements ValueEventListener {
 
     }
 
-    public interface DatabaseCallBack {
+    public interface UploadCallBack {
         void onSuccess();
 
         void onFailure();
