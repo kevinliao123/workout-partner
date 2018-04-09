@@ -109,7 +109,7 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
     private void addUser() {
         final FirebaseUser user = getCurrentUser();
         mDatabase = mDatabase.child(FirebaseConstant.USER_DATABASE).child(user.getUid());
-        HashMap<String, String> userMap = getUserMap(user);
+        HashMap<String, Object> userMap = getUserMap(user);
         mDatabase.setValue(userMap).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 mView.startMainActivity();
@@ -118,13 +118,13 @@ public class AuthenticationPresenter implements AuthenticationContract.Presenter
         });
     }
 
-    private HashMap<String, String> getUserMap(FirebaseUser user) {
-        return new HashMap<String, String>() {
+    private HashMap<String, Object> getUserMap(FirebaseUser user) {
+        return new HashMap<String, Object>() {
             {
                 put(FirebaseConstant.USER_NAME, user.getDisplayName());
                 put(FirebaseConstant.USER_GENDER, "male");
-                put(FirebaseConstant.USER_AGE, "18");
-                put(FirebaseConstant.USER_WEIGHT, "150");
+                put(FirebaseConstant.USER_AGE, 18);
+                put(FirebaseConstant.USER_WEIGHT, 150);
                 put(FirebaseConstant.USER_STATUS, "this is workout partner");
                 put(FirebaseConstant.USER_IMAGE, user.getPhotoUrl().toString());
                 put(FirebaseConstant.USER_THUMB_NAIL, user.getPhotoUrl().toString());

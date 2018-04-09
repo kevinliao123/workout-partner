@@ -1,17 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/user_list"
+        android:layout_marginBottom="@dimen/general_margin_extra_extra_large"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <EditText
+        android:id="@+id/age_edit_text"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="Friends"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        android:hint="x &gt; Age"
+        android:imeOptions="actionDone"
+        android:maxLines="1"
+        android:inputType="number"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/general_margin_medium"
+        android:layout_marginLeft="@dimen/general_margin"/>
+
+    <EditText
+        android:id="@+id/weight_edit_text"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:hint="x &gt; Weight"
+        android:imeOptions="actionDone"
+        android:maxLines="1"
+        android:inputType="number"
+        android:layout_toRightOf="@id/age_edit_text"
+        android:layout_alignBottom="@id/age_edit_text"
+        android:layout_marginLeft="@dimen/general_margin"/>
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/gender_switch"
+        android:layout_width="129dp"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@id/weight_edit_text"
+        android:layout_alignBottom="@+id/weight_edit_text"
+        android:layout_marginLeft="@dimen/general_margin"
+        android:layout_gravity="bottom|right"
+        android:gravity="left|center_vertical"
+        app:showText="true"
+        android:textOff="Male"
+        android:textOn="Female"
+        />
+</RelativeLayout>

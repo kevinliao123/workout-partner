@@ -117,7 +117,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         return new User.UserBuilder()
                 .setUserName(cursor.getString(cursor.getColumnIndex(USER_NAME)))
                 .setGender(cursor.getString(cursor.getColumnIndex(USER_GENDER)))
-                .setAge(cursor.getString(cursor.getColumnIndex(USER_AGE)))
+                .setAge(cursor.getInt(cursor.getColumnIndex(USER_AGE)))
                 .setStatus(cursor.getString(cursor.getColumnIndex(USER_STATUS)))
                 .setImage(cursor.getString(cursor.getColumnIndex(USER_IMAGE)))
                 .setThumbNail(cursor.getString(cursor.getColumnIndex(USER_THUMB_NAIL)))
@@ -126,7 +126,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
 
     private ContentValues getUserContentValues(User user) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(USER_NAME, user.getUserName());
+        contentValues.put(USER_NAME, user.getName());
         contentValues.put(USER_GENDER, user.getGender());
         contentValues.put(USER_AGE, user.getAge());
         contentValues.put(USER_WEIGHT, user.getWeight());

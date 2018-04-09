@@ -109,7 +109,7 @@ public class FirebaseRepository implements ValueEventListener {
     }
 
     public void updateUserProfileInfoToBackEnd(User user) {
-        updateUserProfileInfo(FirebaseConstant.USER_NAME, user.getUserName());
+        updateUserProfileInfo(FirebaseConstant.USER_NAME, user.getName());
         updateUserProfileInfo(FirebaseConstant.USER_AGE, user.getAge());
         updateUserProfileInfo(FirebaseConstant.USER_WEIGHT, user.getWeight());
         updateUserProfileInfo(FirebaseConstant.USER_GENDER, user.getGender());
@@ -117,6 +117,10 @@ public class FirebaseRepository implements ValueEventListener {
     }
 
     public void updateUserProfileInfo(String child, String value) {
+        mUserDataBase.child(child).setValue(value);
+    }
+
+    public void updateUserProfileInfo(String child, long value) {
         mUserDataBase.child(child).setValue(value);
     }
 
@@ -130,8 +134,8 @@ public class FirebaseRepository implements ValueEventListener {
     private User generateUserInfo(DataSnapshot dataSnapshot) {
         return new User.UserBuilder()
                 .setUserName(dataSnapshot.child(FirebaseConstant.USER_NAME).getValue().toString())
-                .setAge(dataSnapshot.child(FirebaseConstant.USER_AGE).getValue().toString())
-                .setWeight(dataSnapshot.child(FirebaseConstant.USER_WEIGHT).getValue().toString())
+                .setAge((long) dataSnapshot.child(FirebaseConstant.USER_AGE).getValue())
+                .setWeight((long) dataSnapshot.child(FirebaseConstant.USER_WEIGHT).getValue())
                 .setGender(dataSnapshot.child(FirebaseConstant.USER_GENDER).getValue().toString())
                 .setStatus(dataSnapshot.child(FirebaseConstant.USER_STATUS).getValue().toString())
                 .setImage(dataSnapshot.child(FirebaseConstant.USER_IMAGE).getValue().toString())

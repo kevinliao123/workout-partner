@@ -1,64 +1,66 @@
 package com.fruitguy.workoutpartner.data;
 
-import android.graphics.Bitmap;
-
 /**
  * Created by heliao on 10/31/17.
  */
 
 public class User {
 
-    String mUserName;
-    String mGender;
-    String mAge;
-    String mWeight;
-    String mStatus;
-    String mImage;
-    String mThumbNail;
+    String name;
+    String gender;
+    long age;
+    long weight;
+    String status;
+    String image;
+    String thumbNail;
 
-    public String getUserName() {
-        return mUserName;
+    public String getName() {
+        return name;
     }
 
-    public String getAge() {
-        return mAge;
+    public long getAge() {
+        return age;
     }
 
-    public String getWeight() {
-        return mWeight;
+    public long getWeight() {
+        return weight;
     }
+
     public String getStatus() {
-        return mStatus;
+        return status;
     }
-
 
     public String getImage() {
-        return mImage;
+        return image;
     }
 
     public String getThumbNail() {
-        return mThumbNail;
+        return thumbNail;
     }
 
 
     public String getGender() {
-        return mGender;
+        return gender;
     }
 
     public User(String userName,
                 String gender,
-                String age,
-                String weight,
+                long age,
+                long weight,
                 String status,
                 String image,
                 String thumbNail) {
-        mUserName = userName;
-        mGender = gender;
-        mAge = age;
-        mWeight = weight;
-        mStatus = status;
-        mImage = image;
-        mThumbNail = thumbNail;
+        name = userName;
+        this.gender = gender;
+        this.age = age;
+        this.weight = weight;
+        this.status = status;
+        this.image = image;
+        this.thumbNail = thumbNail;
+    }
+
+    public User() {
+
     }
 
 
@@ -66,8 +68,8 @@ public class User {
     public static class UserBuilder {
         String mUserName;
         String mGender;
-        String mAge;
-        String mWeight;
+        long mAge;
+        long mWeight;
         String mStatus;
         String mImage;
         String mThumbNail;
@@ -82,12 +84,12 @@ public class User {
             return this;
         }
 
-        public UserBuilder setAge(String age) {
+        public UserBuilder setAge(long age) {
             mAge = age;
             return this;
         }
 
-        public UserBuilder setWeight(String weight) {
+        public UserBuilder setWeight(long weight) {
             mWeight = weight;
             return this;
         }

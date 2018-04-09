@@ -12,12 +12,22 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        release{
+            storeFile file("${System.env.JKS_LOCATION}")
+            storePassword "${System.env.KEYSTORE_PASSWORD}"
+            keyAlias "${System.env.KEY_ALIAS}"
+            keyPassword "${System.env.KEY_PASSWORD}"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
 
         debug {
@@ -48,7 +58,8 @@ dependencies {
     implementation "com.google.firebase:firebase-core:$rootProject.ext.firebaseVersion"
     implementation "com.google.firebase:firebase-database:$rootProject.ext.firebaseVersion"
     implementation "com.google.firebase:firebase-storage:$rootProject.ext.firebaseVersion"
-    implementation "com.firebaseui:firebase-ui-auth:3.1.0"
+    implementation "com.firebaseui:firebase-ui-auth:$rootProject.ext.firebaseUiVersion"
+    implementation "com.firebaseui:firebase-ui-database:$rootProject.ext.firebaseUiVersion"
     implementation "com.android.volley:volley:$rootProject.ext.vollyVersion"
     implementation "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
     implementation "com.squareup.picasso:picasso:$rootProject.ext.picassoVersion"
@@ -71,7 +82,7 @@ dependencies {
 
     // Dagger dependencies
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
     implementation "com.google.dagger:dagger-android:$rootProject.daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"

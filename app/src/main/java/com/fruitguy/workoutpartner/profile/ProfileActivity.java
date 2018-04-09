@@ -139,8 +139,8 @@ public class ProfileActivity extends DaggerAppCompatActivity implements ProfileC
     private User prepareUserData() {
         return new User.UserBuilder()
                 .setUserName(mUserName.getText().toString())
-                .setAge(mUserAge.getText().toString())
-                .setWeight(mUserWeight.getText().toString())
+                .setAge(Integer.valueOf(mUserAge.getText().toString()))
+                .setWeight(Integer.valueOf(mUserWeight.getText().toString()))
                 .setGender(mUserGenderSpinner.getSelectedItem().toString())
                 .setStatus(mUserStatus.getText().toString())
                 .create();
@@ -190,9 +190,9 @@ public class ProfileActivity extends DaggerAppCompatActivity implements ProfileC
     @Override
     public void updateProfileUi(User user) {
         Picasso.with(this).load(user.getImage()).into(mProfileImage);
-        mUserName.setText(user.getUserName());
-        mUserAge.setText(user.getAge());
-        mUserWeight.setText(user.getWeight());
+        mUserName.setText(user.getName());
+        mUserAge.setText(String.valueOf(user.getAge()));
+        mUserWeight.setText(String.valueOf(user.getWeight()));
         mUserStatus.setText(user.getStatus());
         int position = mSpinnerAdapter.getPosition(user.getGender());
         mUserGenderSpinner.setSelection(position);
