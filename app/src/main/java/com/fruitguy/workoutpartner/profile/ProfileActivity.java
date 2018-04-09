@@ -2,12 +2,14 @@ package com.fruitguy.workoutpartner.profile;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,15 +25,18 @@ import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.security.auth.login.LoginException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import dagger.android.support.DaggerAppCompatActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 
 /**
@@ -77,8 +82,25 @@ public class ProfileActivity extends DaggerAppCompatActivity implements ProfileC
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
         setupGenderSpinner();
-        mProfilePresenter.takeView(this);
         mProfilePresenter.start();
+    }
+
+    private void setupGenderSpinner() {
+        mSpinnerAdapter = ArrayAdapter.createFromResource(this,
+                R.array.gender, android.R.layout.simple_spinner_item);
+        mSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mUserGenderSpinner.setAdapter(mSpinnerAdapter);
+        mUserGenderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mUserGenderSpinner.setSelection(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -103,27 +125,35 @@ public class ProfileActivity extends DaggerAppCompatActivity implements ProfileC
                     .start(this);
         }
 
-        mProfilePresenter.handleCropImageResult(requestCode, resultCode, data);
+        handleCropImageResult(requestCode, resultCode, data);
         mProfilePresenter.handleCameraImageResult(requestCode, resultCode, data);
     }
 
+    public void handleCropImageResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            final Uri resultUri = UCrop.getOutput(data);
+            mProfilePresenter.uploadImageByUri(resultUri);
+            Bitmap bitmap = compressToThumbNail(resultUri);
+            mProfilePresenter.uploadThumbNail(bitmap);
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            final Throwable cropError = UCrop.getError(data);
+        }
+    }
 
-    private void setupGenderSpinner() {
-        mSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.gender, android.R.layout.simple_spinner_item);
-        mSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mUserGenderSpinner.setAdapter(mSpinnerAdapter);
-        mUserGenderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mUserGenderSpinner.setSelection(position);
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+    public Bitmap compressToThumbNail(Uri resultUri) {
+        try {
+            File file = new File(resultUri.getPath());
+            Bitmap bitmap = new Compressor(this)
+                    .setMaxHeight(200)
+                    .setMaxWidth(200)
+                    .setQuality(75)
+                    .compressToBitmap(file);
+            return bitmap;
+        } catch (IOException e) {
+            Log.i(TAG, "compressToThumbNail: ");
+            return null;
+        }
     }
 
     @Override

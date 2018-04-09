@@ -1,6 +1,8 @@
 package com.fruitguy.workoutpartner.profile;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 
 import com.fruitguy.workoutpartner.BasePresenter;
 import com.fruitguy.workoutpartner.BaseView;
@@ -16,9 +18,13 @@ public interface ProfileContract {
 
         void updateUserProfileOnUi(User user);
 
-        void handleCropImageResult(int requestCode, int resultCode, Intent data);
-
         void handleCameraImageResult(int requestCode, int resultCode, Intent data);
+
+        void uploadImageByUri(Uri uri);
+
+        void uploadImageByBitmap(Bitmap bitmap);
+
+        void uploadThumbNail(Bitmap bitmap);
     }
 
     interface View extends BaseView<Presenter> {
@@ -29,5 +35,7 @@ public interface ProfileContract {
         void showProgressDialog();
 
         void dismissProgressDialog();
+
+        Bitmap compressToThumbNail(Uri uri);
     }
 }

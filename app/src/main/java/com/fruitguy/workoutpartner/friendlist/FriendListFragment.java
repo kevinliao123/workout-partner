@@ -147,7 +147,7 @@ public class FriendListFragment extends Fragment {
         mFirebaseRecyclerAdapter = new FirebaseRecyclerAdapter<User, UserViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull User model) {
-                holder.setImage(model.getImage());
+                holder.setImage(model.getThumbNail());
                 holder.setUserName(model.getName());
                 holder.setUserStatus(model.getStatus());
 

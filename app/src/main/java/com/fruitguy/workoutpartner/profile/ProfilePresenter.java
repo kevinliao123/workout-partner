@@ -8,8 +8,11 @@ import com.fruitguy.workoutpartner.data.User;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import javax.inject.Inject;
+
+import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -54,41 +57,62 @@ public class ProfilePresenter implements ProfileContract.Presenter {
     }
 
     @Override
-    public void handleCropImageResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
-            final Uri resultUri = UCrop.getOutput(data);
-            mFirebaseRepo.uploadImage(resultUri, new FirebaseRepository.UploadCallBack() {
-                @Override
-                public void onSuccess() {
-                }
-
-                @Override
-                public void onFailure() {
-                    mView.showSnackBar("Upload Failed");
-                }
-            });
-        } else if (resultCode == UCrop.RESULT_ERROR) {
-            final Throwable cropError = UCrop.getError(data);
+    public void handleCameraImageResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == ProfileActivity.CAMERA) {
+            Bitmap image = (Bitmap) data.getExtras().get("data");
+            uploadImageByBitmap(image);
+            uploadThumbNail(image);
         }
     }
 
     @Override
-    public void handleCameraImageResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == ProfileActivity.CAMERA) {
-            Bitmap image = (Bitmap) data.getExtras().get("data");
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            image.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] dataArray = baos.toByteArray();
-            mFirebaseRepo.uploadImage(dataArray, new FirebaseRepository.UploadCallBack() {
-                @Override
-                public void onSuccess() {
-                }
+    public void uploadImageByUri(Uri uri) {
+        mFirebaseRepo.uploadImage(uri, new FirebaseRepository.UploadCallBack() {
+            @Override
+            public void onSuccess() {
+            }
 
-                @Override
-                public void onFailure() {
-                    mView.showSnackBar("Upload Failed");
-                }
-            });
-        }
+            @Override
+            public void onFailure() {
+                mView.showSnackBar("Upload Failed");
+            }
+        });
+    }
+
+    @Override
+    public void uploadImageByBitmap(Bitmap bitmap) {
+        byte[] dataArray = convertToByteArray(bitmap, 100);
+        mFirebaseRepo.uploadImage(dataArray, new FirebaseRepository.UploadCallBack() {
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onFailure() {
+                mView.showSnackBar("Upload Failed");
+            }
+        });
+    }
+
+    @Override
+    public void uploadThumbNail(Bitmap bitmap) {
+        byte[] dataArray = convertToByteArray(bitmap, 65);
+        mFirebaseRepo.uploadThumbNail(dataArray, new FirebaseRepository.UploadCallBack() {
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onFailure() {
+                mView.showSnackBar("Upload Failed");
+            }
+        });
+    }
+
+    private byte[] convertToByteArray(Bitmap bitmap, int quality) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, quality, baos);
+        byte[] dataArray = baos.toByteArray();
+        return dataArray;
     }
 }

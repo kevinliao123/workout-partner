@@ -79,7 +79,7 @@ public class FirebaseRepository implements ValueEventListener {
             if(task.isSuccessful()) {
                 Log.i(TAG, "upload image success");
                 String imageUrl = task.getResult().getDownloadUrl().toString();
-                updateImageUrl(imageUrl);
+                updateImageUrl(imageUrl, FirebaseConstant.USER_IMAGE);
                 callBack.onSuccess();
             } else {
                 Log.i(TAG, "upload image fail");
@@ -92,13 +92,23 @@ public class FirebaseRepository implements ValueEventListener {
         uploadTask.addOnFailureListener((exception) -> Log.e(TAG, exception.getMessage()))
                 .addOnSuccessListener((taskSnapshot) -> {
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    updateImageUrl(downloadUrl.toString());
+                    updateImageUrl(downloadUrl.toString(), FirebaseConstant.USER_IMAGE);
                     callBack.onSuccess();
                 });
     }
 
-    public void updateImageUrl(String imageUrl) {
-        mUserDataBase.child(FirebaseConstant.USER_IMAGE).setValue(imageUrl)
+    public void uploadThumbNail(byte[] data, UploadCallBack callBack) {
+        UploadTask uploadTask = mImageStorage.child("thumb").child(mUser.getUid() + ".png").putBytes(data);
+        uploadTask.addOnFailureListener((exception) -> Log.e(TAG, exception.getMessage()))
+                .addOnSuccessListener((taskSnapshot) -> {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    updateImageUrl(downloadUrl.toString(), FirebaseConstant.USER_THUMB_NAIL);
+                    callBack.onSuccess();
+                });
+    }
+
+    public void updateImageUrl(String imageUrl, @FirebaseConstant.DatabaseField String child) {
+        mUserDataBase.child(child).setValue(imageUrl)
                 .addOnCompleteListener(task -> {
                    if(task.isSuccessful()) {
                        Log.i(TAG, "upload image url success");
