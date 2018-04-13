@@ -19,4 +19,7 @@
     <dimen name="profile_user_name_width">150dp</dimen>
     <dimen name="profile_user_name_height">50dp</dimen>
 
+    <!--User-->
+    <dimen name="user_image_height">210dp</dimen>
+
 </resources>

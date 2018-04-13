@@ -16,17 +16,19 @@ import com.google.firebase.storage.UploadTask;
 import java.util.Map;
 
 import static com.fruitguy.workoutpartner.constant.FirebaseConstant.PROFILE_IMAGE_STORAGE;
+import static com.fruitguy.workoutpartner.constant.FirebaseConstant.USER_DATABASE;
 
 /**
  * Created by heliao on 2/28/18.
  */
 
-public class FirebaseRepository implements ValueEventListener {
+public class FirebaseRepository {
 
     private static final String TAG = FirebaseRepository.class.getSimpleName();
 
     private FirebaseAuth mFirebaseAuth;
-    private DatabaseReference mUserDataBase;
+    private DatabaseReference mDatabase;
+    private DatabaseReference mCurrentUserDataBase;
     private StorageReference mImageStorage;
     private FirebaseUser mUser;
     private DataChangeCallBack mDataChangeCallback;
@@ -36,15 +38,26 @@ public class FirebaseRepository implements ValueEventListener {
             , StorageReference storage
     ) {
         mFirebaseAuth = firebaseAuth;
-        mUserDataBase = database;
+        mDatabase = database;
         mImageStorage = storage;
     }
 
     public void init(DataChangeCallBack callBack) {
-        mUserDataBase = getUserDatabase();
-        mImageStorage = getImageStorage();
         mUser = getCurrentUser();
-        mUserDataBase.addValueEventListener(this);
+        mCurrentUserDataBase = getUserDatabaseById(mUser.getUid());
+        mCurrentUserDataBase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = generateUserInfo(dataSnapshot);
+                mDataChangeCallback.onDataChange(user);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "onCancelled: " + databaseError.getMessage());
+            }
+        });
+        mImageStorage = getImageStorage();
         mDataChangeCallback = callBack;
     }
 
@@ -52,9 +65,37 @@ public class FirebaseRepository implements ValueEventListener {
         return mFirebaseAuth.getCurrentUser();
     }
 
-    public DatabaseReference getUserDatabase() {
-        String userId = getCurrentUser().getUid();
-        return mUserDataBase.child(FirebaseConstant.USER_DATABASE).child(userId);
+    public DatabaseReference getUserDatabaseById(String id) {
+        return mDatabase.child(USER_DATABASE).child(id);
+    }
+
+    public void getSelectedUserInfoById(String id, DataChangeCallBack callBack) {
+        DatabaseReference userDatabase = getUserDatabaseById(id);
+        userDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = generateUserInfo(dataSnapshot);
+                callBack.onDataChange(user);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "onCancelled: " + databaseError.getMessage() );
+            }
+        });
+    }
+
+    private User generateUserInfo(DataSnapshot dataSnapshot) {
+        return new User.UserBuilder()
+                .setUserName(dataSnapshot.child(FirebaseConstant.USER_NAME).getValue().toString())
+                .setAge((long) dataSnapshot.child(FirebaseConstant.USER_AGE).getValue())
+                .setWeight((long) dataSnapshot.child(FirebaseConstant.USER_WEIGHT).getValue())
+                .setGender(dataSnapshot.child(FirebaseConstant.USER_GENDER).getValue().toString())
+                .setStatus(dataSnapshot.child(FirebaseConstant.USER_STATUS).getValue().toString())
+                .setImage(dataSnapshot.child(FirebaseConstant.USER_IMAGE).getValue().toString())
+                .setThumbNail(dataSnapshot.child(FirebaseConstant.USER_THUMB_NAIL).getValue().toString())
+                .create();
     }
 
     public StorageReference getImageStorage() {
@@ -62,7 +103,7 @@ public class FirebaseRepository implements ValueEventListener {
     }
 
     public void updateUserProfile(Map<String, String> userMap, UploadCallBack callBack) {
-        mUserDataBase.setValue(userMap)
+        mCurrentUserDataBase.setValue(userMap)
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()) {
                         callBack.onSuccess();
@@ -108,7 +149,7 @@ public class FirebaseRepository implements ValueEventListener {
     }
 
     public void updateImageUrl(String imageUrl, @FirebaseConstant.DatabaseField String child) {
-        mUserDataBase.child(child).setValue(imageUrl)
+        mCurrentUserDataBase.child(child).setValue(imageUrl)
                 .addOnCompleteListener(task -> {
                    if(task.isSuccessful()) {
                        Log.i(TAG, "upload image url success");
@@ -127,35 +168,11 @@ public class FirebaseRepository implements ValueEventListener {
     }
 
     public void updateUserProfileInfo(String child, String value) {
-        mUserDataBase.child(child).setValue(value);
+        mCurrentUserDataBase.child(child).setValue(value);
     }
 
     public void updateUserProfileInfo(String child, long value) {
-        mUserDataBase.child(child).setValue(value);
-    }
-
-    @Override
-    public void onDataChange(DataSnapshot dataSnapshot) {
-        Log.i(TAG, "onDataChange: ");
-        User user = generateUserInfo(dataSnapshot);
-        mDataChangeCallback.onDataChange(user);
-    }
-
-    private User generateUserInfo(DataSnapshot dataSnapshot) {
-        return new User.UserBuilder()
-                .setUserName(dataSnapshot.child(FirebaseConstant.USER_NAME).getValue().toString())
-                .setAge((long) dataSnapshot.child(FirebaseConstant.USER_AGE).getValue())
-                .setWeight((long) dataSnapshot.child(FirebaseConstant.USER_WEIGHT).getValue())
-                .setGender(dataSnapshot.child(FirebaseConstant.USER_GENDER).getValue().toString())
-                .setStatus(dataSnapshot.child(FirebaseConstant.USER_STATUS).getValue().toString())
-                .setImage(dataSnapshot.child(FirebaseConstant.USER_IMAGE).getValue().toString())
-                .setThumbNail(dataSnapshot.child(FirebaseConstant.USER_THUMB_NAIL).getValue().toString())
-                .create();
-    }
-
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
-
+        mCurrentUserDataBase.child(child).setValue(value);
     }
 
     public interface UploadCallBack {

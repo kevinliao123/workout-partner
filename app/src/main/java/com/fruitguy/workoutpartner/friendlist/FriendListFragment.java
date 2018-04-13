@@ -1,5 +1,6 @@
 package com.fruitguy.workoutpartner.friendlist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.constant.FirebaseConstant;
 import com.fruitguy.workoutpartner.data.User;
+import com.fruitguy.workoutpartner.user.UserActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -151,6 +153,13 @@ public class FriendListFragment extends Fragment {
                 holder.setUserName(model.getName());
                 holder.setUserStatus(model.getStatus());
 
+                String userId = getRef(position).getKey();
+                holder.mView.setOnClickListener(v ->{
+                    Intent intent = new Intent(getContext(), UserActivity.class);
+                    intent.putExtra("user_id", userId);
+                    startActivity(intent);
+                });
+
             }
 
             @Override
@@ -174,6 +183,8 @@ public class FriendListFragment extends Fragment {
 
         @BindView(R.id.user_status)
         TextView mUserStatus;
+
+        String userId;
 
         public UserViewHolder(View itemView) {
             super(itemView);
