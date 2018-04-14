@@ -33,7 +33,8 @@ public class ProfilePresenter implements ProfileContract.Presenter {
 
     @Override
     public void start() {
-        mFirebaseRepo.init(data -> updateUserProfileOnUi((User) data));
+        mFirebaseRepo.init();
+        retrieveUserInfo();
     }
 
     @Override
@@ -44,6 +45,14 @@ public class ProfilePresenter implements ProfileContract.Presenter {
     @Override
     public void dropView() {
         mView = null;
+        mFirebaseRepo.shutdown();
+    }
+
+    private void retrieveUserInfo() {
+        mFirebaseRepo.getCurrentUserInfo(data -> {
+            User user = (User) data;
+            mView.updateProfileUi(user);
+        });
     }
 
     @Override

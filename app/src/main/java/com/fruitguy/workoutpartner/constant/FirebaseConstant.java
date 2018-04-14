@@ -21,8 +21,11 @@ public class FirebaseConstant {
             , USER_IMAGE
             , USER_THUMB_NAIL
             , PROFILE_IMAGE_STORAGE})
-    public @interface DatabaseField{};
-    public static String USER_DATABASE = "users";
+    public @interface DatabaseField {
+    }
+
+    ;
+    public static final String USER_DATABASE = "users";
     public static final String USER_NAME = "name";
     public static final String USER_GENDER = "gender";
     public static final String USER_AGE = "age";
@@ -31,4 +34,34 @@ public class FirebaseConstant {
     public static final String USER_IMAGE = "image";
     public static final String USER_THUMB_NAIL = "thumbNail";
     public static final String PROFILE_IMAGE_STORAGE = "profile_images";
+
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({FRIEND_REQUEST
+            , REQUEST_TYPE
+            , SENT
+            , RECEIVED
+            , STATE_FRIENDS
+            , STATE_NOT_FRIENDS
+            , STATE_REQUEST_RECEIVE
+            , STATE_REQUEST_SENT})
+    public @interface FriendRequest {
+    }
+
+    ;
+    public static final String FRIEND_REQUEST = "friend_request";
+    public static final String REQUEST_TYPE = "request_type";
+    public static final String SENT = "sent";
+    public static final String RECEIVED = "received";
+    public static final String STATE_NOT_FRIENDS = "not_friends";
+    public static final String STATE_FRIENDS = "friends";
+    public static final String STATE_REQUEST_SENT = "request_sent";
+    public static final String STATE_REQUEST_RECEIVE = "request_receive";
+
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({FRIENDS})
+    public @interface Friends {
+    }
+
+    ;
+    public static final String FRIENDS = "friends";
 }

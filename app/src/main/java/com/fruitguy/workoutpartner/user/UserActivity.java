@@ -1,6 +1,7 @@
 package com.fruitguy.workoutpartner.user;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import dagger.android.support.DaggerAppCompatActivity;
 
 public class UserActivity extends DaggerAppCompatActivity implements UserContract.View {
@@ -44,6 +46,8 @@ public class UserActivity extends DaggerAppCompatActivity implements UserContrac
     @BindView(R.id.decline_request_button)
     Button mRequestDeny;
 
+    private String mFriendUserId;
+
 
 
 
@@ -55,9 +59,11 @@ public class UserActivity extends DaggerAppCompatActivity implements UserContrac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
         ButterKnife.bind(this);
-        String userId = getIntent().getStringExtra("user_id");
+        mFriendUserId= getIntent().getStringExtra("user_id");
+        mPresenter.start();
         mPresenter.takeView(this);
-        mPresenter.retrieveUserInfoById(userId);
+        mPresenter.retrieveRequestState(mFriendUserId);
+        mPresenter.retrieveUserInfoById(mFriendUserId);
 
     }
 
@@ -69,7 +75,7 @@ public class UserActivity extends DaggerAppCompatActivity implements UserContrac
 
     @Override
     public void setPresenter(UserContract.Presenter presenter) {
-        
+
     }
 
     public void updateUi(User user) {
@@ -79,6 +85,23 @@ public class UserActivity extends DaggerAppCompatActivity implements UserContrac
         mAge.setText(String.valueOf(user.getAge()));
         mWeight.setText(String.valueOf(user.getWeight()));
         mGender.setText(user.getGender());
+    }
+
+    @OnClick(R.id.send_request_button)
+    public void onFriendRequestClicked(View view) {
+        mPresenter.onFriendRequestButtonClicked(mFriendUserId);
+    }
+
+    public void enableFriendRequest() {
+        mFriendRequest.setEnabled(true);
+    }
+
+    public void disableFriendRequest() {
+        mFriendRequest.setEnabled(false);
+    }
+
+    public void setFriendRequestButtonText(String string) {
+        mFriendRequest.setText(string);
     }
 
 

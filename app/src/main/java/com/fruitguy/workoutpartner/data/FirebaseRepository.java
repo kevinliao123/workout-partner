@@ -13,10 +13,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Map;
 
-import static com.fruitguy.workoutpartner.constant.FirebaseConstant.PROFILE_IMAGE_STORAGE;
-import static com.fruitguy.workoutpartner.constant.FirebaseConstant.USER_DATABASE;
+import static com.fruitguy.workoutpartner.constant.FirebaseConstant.*;
 
 /**
  * Created by heliao on 2/28/18.
@@ -29,9 +30,14 @@ public class FirebaseRepository {
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabase;
     private DatabaseReference mCurrentUserDataBase;
+    private DatabaseReference mFriendRequestDataBase;
+    private DatabaseReference mFriendDatabase;
     private StorageReference mImageStorage;
     private FirebaseUser mUser;
-    private DataChangeCallBack mDataChangeCallback;
+    private ValueEventListener mRequestStateListener;
+    private ValueEventListener mFriendStateListener;
+    private ValueEventListener mUserInfoListener;
+    private String mFriendUserId;
 
     FirebaseRepository(FirebaseAuth firebaseAuth
             , DatabaseReference database
@@ -42,23 +48,49 @@ public class FirebaseRepository {
         mImageStorage = storage;
     }
 
-    public void init(DataChangeCallBack callBack) {
+    public void init() {
         mUser = getCurrentUser();
         mCurrentUserDataBase = getUserDatabaseById(mUser.getUid());
-        mCurrentUserDataBase.addValueEventListener(new ValueEventListener() {
+        mImageStorage = getImageStorage();
+        mFriendRequestDataBase = getFriendRequestDatabase();
+        mFriendDatabase = getFriendsDatabase();
+    }
+
+    public void shutdown() {
+        String currentUserId = mUser.getUid();
+        if (mRequestStateListener != null) {
+            mFriendRequestDataBase.child(currentUserId).removeEventListener(mRequestStateListener);
+        }
+
+        if (mFriendStateListener != null) {
+            mFriendDatabase.child(currentUserId).removeEventListener(mFriendStateListener);
+        }
+
+        if (mUserInfoListener != null) {
+            mCurrentUserDataBase.removeEventListener(mUserInfoListener);
+            if (mFriendUserId != null) {
+                mDatabase.child(mFriendUserId).removeEventListener(mUserInfoListener);
+            }
+        }
+
+        mRequestStateListener = null;
+        mFriendStateListener = null;
+        mUserInfoListener = null;
+    }
+
+    public ValueEventListener getUserInfoListener(DataChangeCallBack<User> callback) {
+        return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = generateUserInfo(dataSnapshot);
-                mDataChangeCallback.onDataChange(user);
+                callback.onDataChange(user);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, "onCancelled: " + databaseError.getMessage());
             }
-        });
-        mImageStorage = getImageStorage();
-        mDataChangeCallback = callBack;
+        };
     }
 
     public FirebaseUser getCurrentUser() {
@@ -69,37 +101,39 @@ public class FirebaseRepository {
         return mDatabase.child(USER_DATABASE).child(id);
     }
 
+    public void getCurrentUserInfo(DataChangeCallBack callback) {
+        String userId = mUser.getUid();
+        getSelectedUserInfoById(userId, callback);
+    }
+
     public void getSelectedUserInfoById(String id, DataChangeCallBack callBack) {
         DatabaseReference userDatabase = getUserDatabaseById(id);
-        userDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = generateUserInfo(dataSnapshot);
-                callBack.onDataChange(user);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "onCancelled: " + databaseError.getMessage() );
-            }
-        });
+        mUserInfoListener = getUserInfoListener(callBack);
+        userDatabase.addValueEventListener(mUserInfoListener);
     }
 
     private User generateUserInfo(DataSnapshot dataSnapshot) {
         return new User.UserBuilder()
-                .setUserName(dataSnapshot.child(FirebaseConstant.USER_NAME).getValue().toString())
-                .setAge((long) dataSnapshot.child(FirebaseConstant.USER_AGE).getValue())
-                .setWeight((long) dataSnapshot.child(FirebaseConstant.USER_WEIGHT).getValue())
-                .setGender(dataSnapshot.child(FirebaseConstant.USER_GENDER).getValue().toString())
-                .setStatus(dataSnapshot.child(FirebaseConstant.USER_STATUS).getValue().toString())
-                .setImage(dataSnapshot.child(FirebaseConstant.USER_IMAGE).getValue().toString())
-                .setThumbNail(dataSnapshot.child(FirebaseConstant.USER_THUMB_NAIL).getValue().toString())
+                .setUserName(dataSnapshot.child(USER_NAME).getValue().toString())
+                .setAge((long) dataSnapshot.child(USER_AGE).getValue())
+                .setWeight((long) dataSnapshot.child(USER_WEIGHT).getValue())
+                .setGender(dataSnapshot.child(USER_GENDER).getValue().toString())
+                .setStatus(dataSnapshot.child(USER_STATUS).getValue().toString())
+                .setImage(dataSnapshot.child(USER_IMAGE).getValue().toString())
+                .setThumbNail(dataSnapshot.child(USER_THUMB_NAIL).getValue().toString())
                 .create();
     }
 
     public StorageReference getImageStorage() {
         return mImageStorage.child(PROFILE_IMAGE_STORAGE);
+    }
+
+    public DatabaseReference getFriendRequestDatabase() {
+        return mDatabase.child(FRIEND_REQUEST);
+    }
+
+    public DatabaseReference getFriendsDatabase() {
+        return mDatabase.child(FRIENDS);
     }
 
     public void updateUserProfile(Map<String, String> userMap, UploadCallBack callBack) {
@@ -120,7 +154,7 @@ public class FirebaseRepository {
             if(task.isSuccessful()) {
                 Log.i(TAG, "upload image success");
                 String imageUrl = task.getResult().getDownloadUrl().toString();
-                updateImageUrl(imageUrl, FirebaseConstant.USER_IMAGE);
+                updateImageUrl(imageUrl, USER_IMAGE);
                 callBack.onSuccess();
             } else {
                 Log.i(TAG, "upload image fail");
@@ -133,7 +167,7 @@ public class FirebaseRepository {
         uploadTask.addOnFailureListener((exception) -> Log.e(TAG, exception.getMessage()))
                 .addOnSuccessListener((taskSnapshot) -> {
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    updateImageUrl(downloadUrl.toString(), FirebaseConstant.USER_IMAGE);
+                    updateImageUrl(downloadUrl.toString(), USER_IMAGE);
                     callBack.onSuccess();
                 });
     }
@@ -143,7 +177,7 @@ public class FirebaseRepository {
         uploadTask.addOnFailureListener((exception) -> Log.e(TAG, exception.getMessage()))
                 .addOnSuccessListener((taskSnapshot) -> {
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    updateImageUrl(downloadUrl.toString(), FirebaseConstant.USER_THUMB_NAIL);
+                    updateImageUrl(downloadUrl.toString(), USER_THUMB_NAIL);
                     callBack.onSuccess();
                 });
     }
@@ -160,11 +194,11 @@ public class FirebaseRepository {
     }
 
     public void updateUserProfileInfoToBackEnd(User user) {
-        updateUserProfileInfo(FirebaseConstant.USER_NAME, user.getName());
-        updateUserProfileInfo(FirebaseConstant.USER_AGE, user.getAge());
-        updateUserProfileInfo(FirebaseConstant.USER_WEIGHT, user.getWeight());
-        updateUserProfileInfo(FirebaseConstant.USER_GENDER, user.getGender());
-        updateUserProfileInfo(FirebaseConstant.USER_STATUS, user.getStatus());
+        updateUserProfileInfo(USER_NAME, user.getName());
+        updateUserProfileInfo(USER_AGE, user.getAge());
+        updateUserProfileInfo(USER_WEIGHT, user.getWeight());
+        updateUserProfileInfo(USER_GENDER, user.getGender());
+        updateUserProfileInfo(USER_STATUS, user.getStatus());
     }
 
     public void updateUserProfileInfo(String child, String value) {
@@ -175,6 +209,154 @@ public class FirebaseRepository {
         mCurrentUserDataBase.child(child).setValue(value);
     }
 
+    public void addFriend(String friendUserId, UploadCallBack callback) {
+        String currentUserId = mUser.getUid();
+        mFriendUserId = friendUserId;
+        String currentDate = DateFormat.getDateTimeInstance().format(new Date());
+        mFriendDatabase.child(currentUserId).child(friendUserId)
+                .setValue(currentDate)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        mFriendDatabase.child(friendUserId).child(currentUserId)
+                                .setValue(currentDate)
+                                .addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        callback.onSuccess();
+                                    } else {
+                                        callback.onFailure();
+                                    }
+                                });
+                    } else {
+                        callback.onFailure();
+                    }
+                });
+    }
+
+    public void unfriend(String friendUserId, UploadCallBack callback) {
+        String currentUserId = mUser.getUid();
+        mFriendUserId = friendUserId;
+        mFriendDatabase.child(currentUserId).child(friendUserId)
+                .removeValue()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        mFriendDatabase.child(friendUserId).child(currentUserId)
+                                .removeValue()
+                                .addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        callback.onSuccess();
+                                    } else {
+                                        callback.onFailure();
+                                    }
+                                });
+                    } else {
+                        callback.onFailure();
+                    }
+                });
+    }
+
+    public void retrieveRequestState(String friendUserId, FriendRequestCallback callback) {
+        String currentUserId = mUser.getUid();
+        mFriendUserId = friendUserId;
+        mRequestStateListener = getRequestStateListener(friendUserId, callback);
+        mFriendStateListener = getFriendStateListener(friendUserId, callback);
+        mFriendRequestDataBase.child(currentUserId).addListenerForSingleValueEvent(mRequestStateListener);
+        mFriendDatabase.child(currentUserId).addListenerForSingleValueEvent(mFriendStateListener);
+    }
+
+    private ValueEventListener getRequestStateListener(String friendUserId, FriendRequestCallback callback) {
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(friendUserId)) {
+                    String requestType = dataSnapshot.child(friendUserId).child(REQUEST_TYPE).getValue().toString();
+                    if (requestType.equals(RECEIVED)) {
+                        callback.onReceived();
+                    } else if (requestType.equals(SENT)) {
+                        callback.onSent();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "onCancelled: " + databaseError.getMessage());
+            }
+        };
+    }
+
+    private ValueEventListener getFriendStateListener(String friendUserId, FriendRequestCallback callback) {
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(friendUserId)) {
+                    callback.onFriend();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "onCancelled: " + databaseError.getMessage());
+            }
+        };
+    }
+
+    public void sentFriendRequest(String friendUserId, UploadCallBack callBack) {
+        String currentUserId = mUser.getUid();
+        mFriendUserId = friendUserId;
+        mFriendRequestDataBase
+                .child(currentUserId)
+                .child(friendUserId)
+                .child(REQUEST_TYPE)
+                .setValue(SENT)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        receiveFriendRequest(currentUserId, friendUserId, callBack);
+                    } else {
+                        callBack.onFailure();
+                    }
+                });
+    }
+
+    public void receiveFriendRequest(String currentUserId, String friendUserId, UploadCallBack callBack) {
+        mFriendRequestDataBase
+                .child(friendUserId)
+                .child(currentUserId)
+                .child(REQUEST_TYPE)
+                .setValue(RECEIVED)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callBack.onSuccess();
+                    } else {
+                        callBack.onFailure();
+                    }
+                });
+    }
+
+    public void removeFriendRequest(String friendUserId, UploadCallBack callBack) {
+        String currentUserId = mUser.getUid();
+        mFriendUserId = friendUserId;
+        mFriendRequestDataBase
+                .child(currentUserId)
+                .child(friendUserId)
+                .removeValue()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        mFriendRequestDataBase.child(friendUserId)
+                                .child(currentUserId)
+                                .removeValue()
+                                .addOnCompleteListener(task1 -> {
+                                    if (task.isSuccessful()) {
+                                        callBack.onSuccess();
+                                    } else {
+                                        callBack.onFailure();
+                                    }
+                                });
+                    } else {
+                        callBack.onFailure();
+                    }
+                });
+    }
+
     public interface UploadCallBack {
         void onSuccess();
 
@@ -183,5 +365,13 @@ public class FirebaseRepository {
 
     public interface DataChangeCallBack<T> {
         void onDataChange(T data);
+    }
+
+    public interface FriendRequestCallback {
+        void onReceived();
+
+        void onSent();
+
+        void onFriend();
     }
 }
