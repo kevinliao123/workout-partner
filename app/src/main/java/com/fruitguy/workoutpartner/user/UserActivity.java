@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.data.User;
+import com.fruitguy.workoutpartner.util.ImageUtils;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -79,7 +80,7 @@ public class UserActivity extends DaggerAppCompatActivity implements UserContrac
     }
 
     public void updateUi(User user) {
-        Picasso.with(this).load(user.getImage()).into(mImageView);
+        ImageUtils.loadImage(this, user.getImage(), mImageView);
         mName.setText(user.getName());
         mStatus.setText(user.getStatus());
         mAge.setText(String.valueOf(user.getAge()));

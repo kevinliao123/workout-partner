@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.chat.ChatFragment;
 import com.fruitguy.workoutpartner.data.UserMessage;
+import com.fruitguy.workoutpartner.util.ImageUtils;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -33,9 +36,9 @@ public class MessageViewHolder extends RecyclerView.ViewHolder implements View.O
 
     public void bind(UserMessage userMessage) {
         mUserMessage = userMessage;
-        Picasso.with(mContext).load(userMessage.getImageUrl().toString()).into(mProfileImage);
         mMessage.setText(userMessage.getMessageBody());
         itemView.setOnClickListener(this);
+        ImageUtils.loadImage(mContext, userMessage.getImageUrl().toString(), mProfileImage);
     }
 
     @Override
@@ -47,7 +50,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder implements View.O
     }
 
     public void setProfileImage(String imageUrl) {
-        Picasso.with(mContext).load(imageUrl).into(mProfileImage);
+        ImageUtils.loadImage(mContext, imageUrl, mProfileImage);
     }
 
     public void setMessage(String message) {

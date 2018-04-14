@@ -42,6 +42,7 @@ ext {
     vollyVersion = '1.0.0'
     gsonVersion = '2.8.2'
     picassoVersion = '2.5.2'
+    okhttpVersion = '2.5.0'
     guavaVersion = '18.0'
     facebookVersion = '4.29.0'
     twitterVersion = '3.0.0'

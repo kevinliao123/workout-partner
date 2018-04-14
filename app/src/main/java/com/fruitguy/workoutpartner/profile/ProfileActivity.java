@@ -20,7 +20,10 @@ import android.widget.TextView;
 
 import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.data.User;
+import com.fruitguy.workoutpartner.util.ImageUtils;
 import com.fruitguy.workoutpartner.util.PermissionUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
@@ -219,7 +222,7 @@ public class ProfileActivity extends DaggerAppCompatActivity implements ProfileC
 
     @Override
     public void updateProfileUi(User user) {
-        Picasso.with(this).load(user.getImage()).into(mProfileImage);
+        ImageUtils.loadImage(this, user.getImage(), mProfileImage);
         mUserName.setText(user.getName());
         mUserAge.setText(String.valueOf(user.getAge()));
         mUserWeight.setText(String.valueOf(user.getWeight()));

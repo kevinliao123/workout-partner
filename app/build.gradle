@@ -73,6 +73,7 @@ dependencies {
     implementation "com.android.volley:volley:$rootProject.ext.vollyVersion"
     implementation "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
     implementation "com.squareup.picasso:picasso:$rootProject.ext.picassoVersion"
+    implementation "com.squareup.okhttp:okhttp:$rootProject.ext.okhttpVersion"
     implementation "com.google.guava:guava:$rootProject.guavaVersion"
     implementation "de.hdodenhof:circleimageview:2.2.0"
     implementation "com.github.yalantis:ucrop:2.2.1"

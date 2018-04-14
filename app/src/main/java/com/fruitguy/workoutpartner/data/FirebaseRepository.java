@@ -98,7 +98,9 @@ public class FirebaseRepository {
     }
 
     public DatabaseReference getUserDatabaseById(String id) {
-        return mDatabase.child(USER_DATABASE).child(id);
+        DatabaseReference database = mDatabase.child(USER_DATABASE).child(id);
+        database.keepSynced(true);
+        return database;
     }
 
     public void getCurrentUserInfo(DataChangeCallBack callback) {

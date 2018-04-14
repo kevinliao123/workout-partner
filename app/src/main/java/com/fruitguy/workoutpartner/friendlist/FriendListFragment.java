@@ -24,6 +24,7 @@ import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.constant.FirebaseConstant;
 import com.fruitguy.workoutpartner.data.User;
 import com.fruitguy.workoutpartner.user.UserActivity;
+import com.fruitguy.workoutpartner.util.ImageUtils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -193,7 +194,7 @@ public class FriendListFragment extends Fragment {
         }
 
         public void setImage(String url) {
-            Picasso.with(getActivity()).load(url).into(mUserImage);
+            ImageUtils.loadImage(getActivity(), url, mUserImage);
         }
 
         public void setUserName(String name) {
