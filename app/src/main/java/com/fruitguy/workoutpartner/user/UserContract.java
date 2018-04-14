@@ -12,6 +12,8 @@ public interface UserContract {
         void onFriendRequestButtonClicked(String friendUserId);
 
         void retrieveRequestState(String friendUserId);
+
+        void removeFriendRequest(String friendUserId);
     }
 
     interface View extends BaseView<Presenter> {
@@ -23,6 +25,10 @@ public interface UserContract {
         void disableFriendRequest();
 
         void setFriendRequestButtonText(String string);
+
+        void showDenyRequestButton();
+
+        void hideDenyRequestButton();
 
     }
 }

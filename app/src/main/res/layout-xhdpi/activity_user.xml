@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/user_image_height_xhdpi"
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_person" />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/general_margin"
+        android:gravity="center_horizontal"
+        android:text="Display Name"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/user_status"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/general_margin"
+        android:gravity="center_horizontal"
+        android:text="Hi this is user status"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/age_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/user_status"
+        android:layout_below="@id/user_status"
+        android:layout_marginTop="@dimen/general_margin"
+        android:text="Age: "
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/weight_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/age_label"
+        android:layout_below="@id/age_label"
+        android:layout_marginTop="@dimen/general_margin"
+        android:text="Weight: "
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/gender_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/age_label"
+        android:layout_below="@id/weight_label"
+        android:layout_marginTop="@dimen/general_margin"
+        android:text="Gender: "
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/user_age"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/age_label"
+        android:layout_marginLeft="@dimen/general_margin"
+        android:layout_toRightOf="@id/age_label"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/user_weight"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/user_age"
+        android:layout_alignTop="@+id/weight_label"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/gender"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/user_age"
+        android:layout_alignTop="@+id/gender_label"
+        android:textSize="16sp" />
+
+
+    <Button
+        android:id="@+id/send_request_button"
+        android:layout_width="@dimen/general_button_width"
+        android:layout_height="@dimen/general_button_height"
+        android:layout_marginTop="@dimen/general_margin"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/gender"
+        android:background="@drawable/shape_rect_cornered_white"
+        android:text="Send Friend Request"
+        android:textAllCaps="false"
+        android:textColor="@color/summer_red" />
+
+    <Button
+        android:id="@+id/deny_request_button"
+        android:layout_width="@dimen/general_button_width"
+        android:layout_height="@dimen/general_button_height"
+        android:layout_marginTop="@dimen/general_margin"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/send_request_button"
+        android:background="@drawable/shape_rect_cornered_white"
+        android:text="Deny Friend Request"
+        android:textAllCaps="false"
+        android:textColor="@color/summer_red"
+        android:visibility="invisible"/>
+</RelativeLayout>

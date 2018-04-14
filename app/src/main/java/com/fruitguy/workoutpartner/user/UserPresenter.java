@@ -39,18 +39,21 @@ public class UserPresenter implements UserContract.Presenter {
             public void onReceived() {
                 mCurrentState = STATE_REQUEST_RECEIVE;
                 mView.setFriendRequestButtonText("Accept Friend Request");
+                mView.showDenyRequestButton();
             }
 
             @Override
             public void onSent() {
                 mCurrentState = STATE_REQUEST_SENT;
                 mView.setFriendRequestButtonText("Cancel Friend Request");
+                mView.hideDenyRequestButton();
             }
 
             @Override
             public void onFriend() {
                 mCurrentState = STATE_FRIENDS;
                 mView.setFriendRequestButtonText("Unfriend");
+                mView.hideDenyRequestButton();
             }
         });
     }
@@ -70,7 +73,7 @@ public class UserPresenter implements UserContract.Presenter {
                 sentFriendRequest(friendUserId);
                 break;
             case STATE_REQUEST_SENT:
-                cancelFriendRequest(friendUserId);
+                removeFriendRequest(friendUserId);
                 break;
             case STATE_REQUEST_RECEIVE:
                 addFriend(friendUserId);
@@ -98,7 +101,8 @@ public class UserPresenter implements UserContract.Presenter {
         });
     }
 
-    private void cancelFriendRequest(String friendUserId) {
+    @Override
+    public void removeFriendRequest(String friendUserId) {
         mView.disableFriendRequest();
         mRepository.removeFriendRequest(friendUserId, new FirebaseRepository.UploadCallBack() {
             @Override
@@ -106,6 +110,7 @@ public class UserPresenter implements UserContract.Presenter {
                 mCurrentState = STATE_NOT_FRIENDS;
                 mView.enableFriendRequest();
                 mView.setFriendRequestButtonText("Send Friend Request");
+                mView.hideDenyRequestButton();
             }
 
             @Override

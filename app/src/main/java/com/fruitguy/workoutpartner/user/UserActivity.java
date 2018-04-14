@@ -29,9 +29,6 @@ public class UserActivity extends DaggerAppCompatActivity implements UserContrac
     @BindView(R.id.user_status)
     TextView mStatus;
 
-    @BindView(R.id.total_friends)
-    TextView mCountOfFriend;
-
     @BindView(R.id.user_age)
     TextView mAge;
 
@@ -44,7 +41,7 @@ public class UserActivity extends DaggerAppCompatActivity implements UserContrac
     @BindView(R.id.send_request_button)
     Button mFriendRequest;
 
-    @BindView(R.id.decline_request_button)
+    @BindView(R.id.deny_request_button)
     Button mRequestDeny;
 
     private String mFriendUserId;
@@ -93,16 +90,34 @@ public class UserActivity extends DaggerAppCompatActivity implements UserContrac
         mPresenter.onFriendRequestButtonClicked(mFriendUserId);
     }
 
+    @OnClick(R.id.deny_request_button)
+    public void onDenyRequestButtonClicked(View view) {
+        mPresenter.removeFriendRequest(mFriendUserId);
+    }
+
+    @Override
     public void enableFriendRequest() {
         mFriendRequest.setEnabled(true);
     }
 
+    @Override
     public void disableFriendRequest() {
         mFriendRequest.setEnabled(false);
     }
 
+    @Override
     public void setFriendRequestButtonText(String string) {
         mFriendRequest.setText(string);
+    }
+
+    @Override
+    public void showDenyRequestButton() {
+        mRequestDeny.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideDenyRequestButton() {
+        mRequestDeny.setVisibility(View.INVISIBLE);
     }
 
 
