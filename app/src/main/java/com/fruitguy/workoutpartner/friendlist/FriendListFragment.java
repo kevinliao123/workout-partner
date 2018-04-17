@@ -1,4 +1,4 @@
-package com.fruitguy.workoutpartner.request;
+package com.fruitguy.workoutpartner.friendlist;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,12 +14,12 @@ import com.fruitguy.workoutpartner.R;
  * Created by heliao on 2/6/18.
  */
 
-public class RequestFragment extends Fragment {
+public class FriendListFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_request, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_friend_list, container, false);
 
         return rootView;
     }

@@ -17,7 +17,7 @@ import com.fruitguy.workoutpartner.chat.ChatFragment;
 import com.fruitguy.workoutpartner.search.SearchFragment;
 import com.fruitguy.workoutpartner.nearby.NearbyFragment;
 import com.fruitguy.workoutpartner.profile.ProfileActivity;
-import com.fruitguy.workoutpartner.request.RequestFragment;
+import com.fruitguy.workoutpartner.friendlist.FriendListFragment;
 import com.fruitguy.workoutpartner.util.PermissionUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements MainPageContract.
         list.add(new SearchFragment());
         list.add(new NearbyFragment());
         list.add(new ChatFragment());
-        list.add(new RequestFragment());
+        list.add(new FriendListFragment());
         SectionPageAdapter sectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager(),list);
         mViewPager.setAdapter(sectionPageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
