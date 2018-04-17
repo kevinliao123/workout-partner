@@ -36,6 +36,8 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnEditorAction;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fruitguy.workoutpartner.constant.FirebaseConstant.FRIEND_USER_ID;
+
 /**
  * Created by heliao on 2/6/18.
  */
@@ -157,7 +159,7 @@ public class FriendListFragment extends Fragment {
                 String userId = getRef(position).getKey();
                 holder.mView.setOnClickListener(v ->{
                     Intent intent = new Intent(getContext(), UserActivity.class);
-                    intent.putExtra("user_id", userId);
+                    intent.putExtra(FRIEND_USER_ID, userId);
                     startActivity(intent);
                 });
 

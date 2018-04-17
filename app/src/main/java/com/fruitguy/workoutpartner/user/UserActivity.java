@@ -18,6 +18,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import dagger.android.support.DaggerAppCompatActivity;
 
+import static com.fruitguy.workoutpartner.constant.FirebaseConstant.FRIEND_USER_ID;
+import static com.fruitguy.workoutpartner.constant.FirebaseConstant.FROM_USER_ID;
+
 public class UserActivity extends DaggerAppCompatActivity implements UserContract.View {
 
     @BindView(R.id.profile_image)
@@ -57,12 +60,18 @@ public class UserActivity extends DaggerAppCompatActivity implements UserContrac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
         ButterKnife.bind(this);
-        mFriendUserId= getIntent().getStringExtra("user_id");
+        mFriendUserId= getIntent().getStringExtra(FRIEND_USER_ID);
         mPresenter.start();
         mPresenter.takeView(this);
         mPresenter.retrieveRequestState(mFriendUserId);
         mPresenter.retrieveUserInfoById(mFriendUserId);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.takeView(this);
     }
 
     @Override

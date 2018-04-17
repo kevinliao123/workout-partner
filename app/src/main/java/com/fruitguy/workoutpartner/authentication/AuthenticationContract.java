@@ -26,8 +26,6 @@ public interface AuthenticationContract {
 
         void onAuthenticationResponse(int requestCode, int resultCode, Intent data);
 
-        FirebaseUser getCurrentUser();
-
         boolean isSignInSuccessful();
     }
 }

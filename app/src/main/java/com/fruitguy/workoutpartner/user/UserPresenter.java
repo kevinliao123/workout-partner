@@ -131,6 +131,7 @@ public class UserPresenter implements UserContract.Presenter {
                         mCurrentState = STATE_FRIENDS;
                         mView.enableFriendRequest();
                         mView.setFriendRequestButtonText("Unfriend");
+                        mView.hideDenyRequestButton();
                     }
 
                     @Override

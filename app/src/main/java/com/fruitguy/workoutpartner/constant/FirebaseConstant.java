@@ -23,9 +23,8 @@ public class FirebaseConstant {
             , PROFILE_IMAGE_STORAGE})
     public @interface DatabaseField {
     }
-
-    ;
     public static final String USER_DATABASE = "users";
+    public static final String DEVICE_TOKEN = "device_token";
     public static final String USER_NAME = "name";
     public static final String USER_GENDER = "gender";
     public static final String USER_AGE = "age";
@@ -46,8 +45,6 @@ public class FirebaseConstant {
             , STATE_REQUEST_SENT})
     public @interface FriendRequest {
     }
-
-    ;
     public static final String FRIEND_REQUEST = "friend_request";
     public static final String REQUEST_TYPE = "request_type";
     public static final String SENT = "sent";
@@ -61,7 +58,10 @@ public class FirebaseConstant {
     @StringDef({FRIENDS})
     public @interface Friends {
     }
-
-    ;
     public static final String FRIENDS = "friends";
+
+    public static final String NOTIFICATION = "notification";
+    public static final String NOTIFICATION_TYPE = "request";
+    public static final String FROM_USER_ID = "from_user_id";
+    public static final String FRIEND_USER_ID = "user_id";
 }

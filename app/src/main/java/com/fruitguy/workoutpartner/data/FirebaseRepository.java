@@ -15,6 +15,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.fruitguy.workoutpartner.constant.FirebaseConstant.*;
@@ -32,6 +33,7 @@ public class FirebaseRepository {
     private DatabaseReference mCurrentUserDataBase;
     private DatabaseReference mFriendRequestDataBase;
     private DatabaseReference mFriendDatabase;
+    private DatabaseReference mNotificationDatabase;
     private StorageReference mImageStorage;
     private FirebaseUser mUser;
     private ValueEventListener mRequestStateListener;
@@ -54,6 +56,7 @@ public class FirebaseRepository {
         mImageStorage = getImageStorage();
         mFriendRequestDataBase = getFriendRequestDatabase();
         mFriendDatabase = getFriendsDatabase();
+        mNotificationDatabase = getNotificationDatabase();
     }
 
     public void shutdown() {
@@ -132,6 +135,10 @@ public class FirebaseRepository {
 
     public DatabaseReference getFriendRequestDatabase() {
         return mDatabase.child(FRIEND_REQUEST);
+    }
+
+    public DatabaseReference getNotificationDatabase() {
+        return mDatabase.child(NOTIFICATION);
     }
 
     public DatabaseReference getFriendsDatabase() {
@@ -215,45 +222,33 @@ public class FirebaseRepository {
         String currentUserId = mUser.getUid();
         mFriendUserId = friendUserId;
         String currentDate = DateFormat.getDateTimeInstance().format(new Date());
-        mFriendDatabase.child(currentUserId).child(friendUserId)
-                .setValue(currentDate)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        mFriendDatabase.child(friendUserId).child(currentUserId)
-                                .setValue(currentDate)
-                                .addOnCompleteListener(task1 -> {
-                                    if (task1.isSuccessful()) {
-                                        callback.onSuccess();
-                                    } else {
-                                        callback.onFailure();
-                                    }
-                                });
-                    } else {
-                        callback.onFailure();
-                    }
-                });
+        Map<String, Object> map = new HashMap<>();
+        map.put(currentUserId + "/" + friendUserId, currentDate);
+        map.put(friendUserId + "/" + currentUserId, currentDate);
+        mFriendDatabase.updateChildren(map, (databaseError, databaseReference) -> {
+            if(databaseError == null) {
+                callback.onSuccess();
+            } else {
+                callback.onFailure();
+                Log.e(TAG, "addFriend: " + databaseError.getMessage() );
+            }
+        });
     }
 
     public void unfriend(String friendUserId, UploadCallBack callback) {
         String currentUserId = mUser.getUid();
         mFriendUserId = friendUserId;
-        mFriendDatabase.child(currentUserId).child(friendUserId)
-                .removeValue()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        mFriendDatabase.child(friendUserId).child(currentUserId)
-                                .removeValue()
-                                .addOnCompleteListener(task1 -> {
-                                    if (task1.isSuccessful()) {
-                                        callback.onSuccess();
-                                    } else {
-                                        callback.onFailure();
-                                    }
-                                });
-                    } else {
-                        callback.onFailure();
-                    }
-                });
+        Map<String, Object> map = new HashMap<>();
+        map.put(currentUserId + "/" + friendUserId, null);
+        map.put(friendUserId + "/" + currentUserId, null);
+        mFriendDatabase.updateChildren(map, (databaseError, databaseReference) -> {
+            if(databaseError == null) {
+                callback.onSuccess();
+            } else {
+                callback.onFailure();
+                Log.e(TAG, "addFriend: " + databaseError.getMessage() );
+            }
+        });
     }
 
     public void retrieveRequestState(String friendUserId, FriendRequestCallback callback) {
@@ -305,58 +300,62 @@ public class FirebaseRepository {
     public void sentFriendRequest(String friendUserId, UploadCallBack callBack) {
         String currentUserId = mUser.getUid();
         mFriendUserId = friendUserId;
-        mFriendRequestDataBase
-                .child(currentUserId)
-                .child(friendUserId)
-                .child(REQUEST_TYPE)
-                .setValue(SENT)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        receiveFriendRequest(currentUserId, friendUserId, callBack);
-                    } else {
-                        callBack.onFailure();
-                    }
-                });
-    }
+        Map<String, Object> map = new HashMap<>();
+        map.put(currentUserId
+                    +"/"+ friendUserId
+                    +"/"+ REQUEST_TYPE
+                , SENT);
 
-    public void receiveFriendRequest(String currentUserId, String friendUserId, UploadCallBack callBack) {
-        mFriendRequestDataBase
-                .child(friendUserId)
-                .child(currentUserId)
-                .child(REQUEST_TYPE)
-                .setValue(RECEIVED)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        callBack.onSuccess();
-                    } else {
-                        callBack.onFailure();
-                    }
-                });
+        map.put(friendUserId
+                        +"/"+ currentUserId
+                        +"/"+ REQUEST_TYPE
+                , RECEIVED);
+
+        mFriendRequestDataBase.updateChildren(map,(databaseError, databaseReference)  -> {
+            if(databaseError != null) {
+                Log.e(TAG, "sentFriendRequest: " + databaseError.getMessage());
+                callBack.onFailure();
+                return;
+            }
+
+            sendNotification(friendUserId);
+            callBack.onSuccess();
+
+        });
     }
 
     public void removeFriendRequest(String friendUserId, UploadCallBack callBack) {
+
         String currentUserId = mUser.getUid();
         mFriendUserId = friendUserId;
-        mFriendRequestDataBase
-                .child(currentUserId)
-                .child(friendUserId)
-                .removeValue()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        mFriendRequestDataBase.child(friendUserId)
-                                .child(currentUserId)
-                                .removeValue()
-                                .addOnCompleteListener(task1 -> {
-                                    if (task.isSuccessful()) {
-                                        callBack.onSuccess();
-                                    } else {
-                                        callBack.onFailure();
-                                    }
-                                });
-                    } else {
-                        callBack.onFailure();
-                    }
-                });
+        Map<String, Object> map = new HashMap<>();
+        map.put(currentUserId
+                        +"/"+ friendUserId
+                        +"/"+ REQUEST_TYPE
+                , null);
+
+        map.put(friendUserId
+                        +"/"+ currentUserId
+                        +"/"+ REQUEST_TYPE
+                , null);
+
+        mFriendRequestDataBase.updateChildren(map,(databaseError, databaseReference)  -> {
+            if(databaseError != null) {
+                Log.e(TAG, "sentFriendRequest: " + databaseError.getMessage());
+                callBack.onFailure();
+                return;
+            }
+            callBack.onSuccess();
+
+        });
+    }
+
+    public void sendNotification(String friendUserId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("from", getCurrentUser().getUid());
+        map.put("type", NOTIFICATION_TYPE);
+
+        mNotificationDatabase.child(friendUserId).push().setValue(map);
     }
 
     public interface UploadCallBack {
