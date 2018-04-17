@@ -1,4 +1,4 @@
-package com.fruitguy.workoutpartner.search;
+package com.fruitguy.workoutpartner.nearby;
 
 
 import android.text.TextUtils;
@@ -10,12 +10,12 @@ import com.google.firebase.auth.FirebaseUser;
  * Created by heliao on 1/15/18.
  */
 
-public class SearchPresenter implements SearchContract.Presenter, SearchInteractor.SearchCallBack {
+public class NearbyPresenter implements NearbyContract.Presenter, NearbyInteractor.SearchCallBack {
     private FirebaseUser mCurrentUser;
-    private SearchInteractor mSearchInteractor;
-    private SearchContract.View mView;
+    private NearbyInteractor mSearchInteractor;
+    private NearbyContract.View mView;
 
-    public SearchPresenter(FirebaseUser user, SearchInteractor searchInteractor, SearchContract.View view) {
+    public NearbyPresenter(FirebaseUser user, NearbyInteractor searchInteractor, NearbyContract.View view) {
         mCurrentUser = user;
         mSearchInteractor = searchInteractor;
         mView = view;

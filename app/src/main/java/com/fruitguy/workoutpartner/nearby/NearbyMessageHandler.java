@@ -1,4 +1,4 @@
-package com.fruitguy.workoutpartner.search;
+package com.fruitguy.workoutpartner.nearby;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -25,7 +25,7 @@ import static com.google.android.gms.common.internal.zzbq.checkNotNull;
  * Created by heliao on 1/15/18.
  */
 
-public class NearbyMessageHandler implements SearchInteractor {
+public class NearbyMessageHandler implements NearbyInteractor {
 
     private static final String TAG = NearbyMessageHandler.class.getSimpleName();
     private static final int TTL_IN_SECONDS = 3 * 60; // Three minutes.

@@ -75,8 +75,8 @@ public class UserActivity extends DaggerAppCompatActivity implements UserContrac
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
         mPresenter.dropView();
     }
 

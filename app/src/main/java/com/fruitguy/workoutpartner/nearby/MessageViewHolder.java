@@ -1,8 +1,7 @@
-package com.fruitguy.workoutpartner.search;
+package com.fruitguy.workoutpartner.nearby;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,9 +11,6 @@ import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.chat.ChatFragment;
 import com.fruitguy.workoutpartner.data.UserMessage;
 import com.fruitguy.workoutpartner.util.ImageUtils;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by heliao on 1/21/18.

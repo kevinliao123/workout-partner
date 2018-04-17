@@ -1,4 +1,4 @@
-package com.fruitguy.workoutpartner.search;
+package com.fruitguy.workoutpartner.nearby;
 
 import android.os.Bundle;
 import android.support.v7.util.DiffUtil;

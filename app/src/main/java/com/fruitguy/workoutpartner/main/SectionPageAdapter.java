@@ -5,10 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.fruitguy.workoutpartner.chat.ChatFragment;
-import com.fruitguy.workoutpartner.request.RequestFragment;
-import com.fruitguy.workoutpartner.search.SearchFragment;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;

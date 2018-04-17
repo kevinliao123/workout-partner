@@ -1,4 +1,4 @@
-package com.fruitguy.workoutpartner.search;
+package com.fruitguy.workoutpartner.nearby;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
@@ -37,10 +36,10 @@ import butterknife.OnClick;
  * Created by heliao on 1/15/18.
  */
 
-public class SearchFragment extends Fragment implements SearchContract.View
+public class NearbyFragment extends Fragment implements NearbyContract.View
         , GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = SearchFragment.class.getSimpleName();
+    private static final String TAG = NearbyFragment.class.getSimpleName();
 
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -54,14 +53,14 @@ public class SearchFragment extends Fragment implements SearchContract.View
     @BindView(R.id.post_button)
     FloatingActionButton mPostButton;
 
-    private SearchContract.Presenter mSearchPresenter;
+    private NearbyContract.Presenter mSearchPresenter;
     private MessageListAdapter mMessageListAdapter;
     private GoogleApiClient mGoogleApiClient;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_nearby, container, false);
         ButterKnife.bind(this, rootView);
         mPostButton.setEnabled(false);
         mSubscribeSwitch.setEnabled(false);
@@ -84,9 +83,9 @@ public class SearchFragment extends Fragment implements SearchContract.View
     }
 
     private void initializeSearchPresenter() {
-        SearchInteractor searchInteractor = Injection.provideSearchInteractor(mGoogleApiClient);
+        NearbyInteractor searchInteractor = Injection.provideSearchInteractor(mGoogleApiClient);
         FirebaseUser User = Injection.provideFirebaseUser();
-        mSearchPresenter = new SearchPresenter(User, searchInteractor, this);
+        mSearchPresenter = new NearbyPresenter(User, searchInteractor, this);
     }
 
     private void initializeRecyclerView() {
@@ -120,7 +119,7 @@ public class SearchFragment extends Fragment implements SearchContract.View
     }
 
     @Override
-    public void setPresenter(SearchContract.Presenter presenter) {
+    public void setPresenter(NearbyContract.Presenter presenter) {
         mSearchPresenter = presenter;
     }
 

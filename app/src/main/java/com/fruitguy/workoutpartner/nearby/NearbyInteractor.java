@@ -1,13 +1,12 @@
-package com.fruitguy.workoutpartner.search;
+package com.fruitguy.workoutpartner.nearby;
 
 import com.fruitguy.workoutpartner.data.UserMessage;
-import com.google.android.gms.nearby.messages.Message;
 
 /**
  * Created by heliao on 1/16/18.
  */
 
-public interface SearchInteractor {
+public interface NearbyInteractor {
 
     interface SearchCallBack{
         void onSubscribeSuccess();

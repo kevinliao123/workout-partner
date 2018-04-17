@@ -1,4 +1,4 @@
-package com.fruitguy.workoutpartner.search;
+package com.fruitguy.workoutpartner.nearby;
 
 import com.fruitguy.workoutpartner.BasePresenter;
 import com.fruitguy.workoutpartner.BaseView;
@@ -8,7 +8,7 @@ import com.fruitguy.workoutpartner.data.UserMessage;
  * Created by heliao on 1/15/18.
  */
 
-public interface SearchContract {
+public interface NearbyContract {
     interface Presenter extends BasePresenter {
         void subscribe();
 
