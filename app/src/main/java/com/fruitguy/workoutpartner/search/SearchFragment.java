@@ -1,4 +1,4 @@
-package com.fruitguy.workoutpartner.friendlist;
+package com.fruitguy.workoutpartner.search;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +28,6 @@ import com.fruitguy.workoutpartner.util.ImageUtils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,9 +41,9 @@ import static com.fruitguy.workoutpartner.constant.FirebaseConstant.FRIEND_USER_
  * Created by heliao on 2/6/18.
  */
 
-public class FriendListFragment extends Fragment {
+public class SearchFragment extends Fragment {
 
-    private static final String TAG = FriendListFragment.class.getSimpleName();
+    private static final String TAG = SearchFragment.class.getSimpleName();
 
     @BindView(R.id.user_list)
     RecyclerView mUserList;
@@ -64,7 +63,7 @@ public class FriendListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_friend_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, rootView);
         setupRecyclerView();
 

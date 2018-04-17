@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.authentication.AuthenticationActivity;
 import com.fruitguy.workoutpartner.chat.ChatFragment;
-import com.fruitguy.workoutpartner.friendlist.FriendListFragment;
+import com.fruitguy.workoutpartner.search.SearchFragment;
 import com.fruitguy.workoutpartner.nearby.NearbyFragment;
 import com.fruitguy.workoutpartner.profile.ProfileActivity;
 import com.fruitguy.workoutpartner.request.RequestFragment;
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements MainPageContract.
 
     private void setupViewPager() {
         List<Fragment> list = new ArrayList<>();
-        list.add(new FriendListFragment());
+        list.add(new SearchFragment());
         list.add(new NearbyFragment());
         list.add(new ChatFragment());
         list.add(new RequestFragment());
