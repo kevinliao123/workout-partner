@@ -59,6 +59,7 @@ public class FirebaseConstant {
     public @interface Friends {
     }
     public static final String FRIENDS = "friends";
+    public static final String DATE = "date";
 
     public static final String NOTIFICATION = "notification";
     public static final String NOTIFICATION_TYPE = "request";

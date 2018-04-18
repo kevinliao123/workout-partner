@@ -224,8 +224,8 @@ public class FirebaseRepository {
         mFriendUserId = friendUserId;
         String currentDate = DateFormat.getDateTimeInstance().format(new Date());
         Map<String, Object> map = new HashMap<>();
-        map.put(currentUserId + "/" + friendUserId, currentDate);
-        map.put(friendUserId + "/" + currentUserId, currentDate);
+        map.put(currentUserId + "/" + friendUserId +"/"+ DATE, currentDate);
+        map.put(friendUserId + "/" + currentUserId +"/"+ DATE, currentDate);
         mFriendDatabase.updateChildren(map, (databaseError, databaseReference) -> {
             if(databaseError == null) {
                 callback.onSuccess();
