@@ -24,7 +24,6 @@ import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.constant.FirebaseConstant;
 import com.fruitguy.workoutpartner.data.User;
 import com.fruitguy.workoutpartner.user.UserActivity;
-import com.fruitguy.workoutpartner.util.ImageUtils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -33,7 +32,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnEditorAction;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fruitguy.workoutpartner.constant.FirebaseConstant.FRIEND_USER_ID;
 
@@ -151,7 +149,7 @@ public class SearchFragment extends Fragment {
         mFirebaseRecyclerAdapter = new FirebaseRecyclerAdapter<User, UserViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull User model) {
-                holder.setImage(model.getThumbNail());
+                holder.setImage(getContext(), model.getThumbNail());
                 holder.setUserName(model.getName());
                 holder.setUserStatus(model.getStatus());
 
@@ -172,38 +170,5 @@ public class SearchFragment extends Fragment {
         };
         mFirebaseRecyclerAdapter.startListening();
         mUserList.setAdapter(mFirebaseRecyclerAdapter);
-    }
-
-    public class UserViewHolder extends RecyclerView.ViewHolder {
-        View mView;
-
-        @BindView(R.id.user_image)
-        CircleImageView mUserImage;
-
-        @BindView(R.id.user_name)
-        TextView mUserName;
-
-        @BindView(R.id.user_status)
-        TextView mUserStatus;
-
-        String userId;
-
-        public UserViewHolder(View itemView) {
-            super(itemView);
-            mView = itemView;
-            ButterKnife.bind(this, mView);
-        }
-
-        public void setImage(String url) {
-            ImageUtils.loadImage(getActivity(), url, mUserImage);
-        }
-
-        public void setUserName(String name) {
-            mUserName.setText(name);
-        }
-
-        public void setUserStatus(String status) {
-            mUserStatus.setText(status);
-        }
     }
 }

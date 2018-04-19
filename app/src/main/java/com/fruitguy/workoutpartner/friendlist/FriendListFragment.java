@@ -1,7 +1,6 @@
 package com.fruitguy.workoutpartner.friendlist;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,11 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -21,11 +18,8 @@ import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.chat.ChatActivity;
 import com.fruitguy.workoutpartner.constant.FirebaseConstant;
 import com.fruitguy.workoutpartner.data.Friend;
-import com.fruitguy.workoutpartner.data.User;
-import com.fruitguy.workoutpartner.search.SearchFragment;
+import com.fruitguy.workoutpartner.search.UserViewHolder;
 import com.fruitguy.workoutpartner.user.UserActivity;
-import com.fruitguy.workoutpartner.util.ImageUtils;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +30,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fruitguy.workoutpartner.constant.FirebaseConstant.FRIEND_IMAGE;
 import static com.fruitguy.workoutpartner.constant.FirebaseConstant.FRIEND_NAME;
@@ -54,7 +47,7 @@ public class FriendListFragment extends Fragment {
     @BindView(R.id.friend_list)
     RecyclerView mFriendList;
 
-    FirebaseRecyclerAdapter<Friend, FriendViewHolder> mFirebaseRecyclerAdapter;
+    FirebaseRecyclerAdapter<Friend, UserViewHolder> mFirebaseRecyclerAdapter;
 
     DatabaseReference mUserDatabase;
 
@@ -101,9 +94,9 @@ public class FriendListFragment extends Fragment {
     }
 
     private void attachRecyclerAdapter(FirebaseRecyclerOptions options) {
-        mFirebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Friend, FriendViewHolder>(options) {
+        mFirebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Friend, UserViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull FriendViewHolder holder, int position, @NonNull Friend model) {
+            protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull Friend model) {
                 String key = getRef(position).getKey();
                 mUserDatabase.child(key).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -111,7 +104,7 @@ public class FriendListFragment extends Fragment {
                         String name = dataSnapshot.child(USER_NAME).getValue().toString();
                         String thumb = dataSnapshot.child(USER_THUMB_NAIL).getValue().toString();
                         String status = dataSnapshot.child(USER_STATUS).getValue().toString();
-                        holder.setImage(thumb);
+                        holder.setImage(getContext(), thumb);
                         holder.setUserName(name);
                         holder.setUserStatus(status);
                         holder.mView.setOnClickListener(view -> {
@@ -144,46 +137,13 @@ public class FriendListFragment extends Fragment {
 
             @NonNull
             @Override
-            public FriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item, parent, false);
-                return new FriendViewHolder(view);
+                return new UserViewHolder(view);
             }
         };
 
         mFirebaseRecyclerAdapter.startListening();
         mFriendList.setAdapter(mFirebaseRecyclerAdapter);
-    }
-
-    public class FriendViewHolder extends RecyclerView.ViewHolder {
-        public View mView;
-
-        @BindView(R.id.user_image)
-        CircleImageView mUserImage;
-
-        @BindView(R.id.user_name)
-        TextView mUserName;
-
-        @BindView(R.id.user_status)
-        TextView mUserStatus;
-
-        String userId;
-
-        public FriendViewHolder(View itemView) {
-            super(itemView);
-            mView = itemView;
-            ButterKnife.bind(this, mView);
-        }
-
-        public void setImage(String url) {
-            ImageUtils.loadImage(getActivity(), url, mUserImage);
-        }
-
-        public void setUserName(String name) {
-            mUserName.setText(name);
-        }
-
-        public void setUserStatus(String status) {
-            mUserStatus.setText(status);
-        }
     }
 }

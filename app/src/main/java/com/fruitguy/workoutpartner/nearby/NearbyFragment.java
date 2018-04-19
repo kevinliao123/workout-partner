@@ -93,12 +93,9 @@ public class NearbyFragment extends Fragment implements NearbyContract.View
         mMessageRecyclerView.setLayoutManager(mLayoutManager);
         mMessageListAdapter = new MessageListAdapter();
         mMessageRecyclerView.setAdapter(mMessageListAdapter);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        mSwipeRefreshLayout.setOnRefreshListener( () -> {
                 mMessageListAdapter.refresh();
                 mSwipeRefreshLayout.setRefreshing(false);
-            }
         });
     }
 
@@ -196,16 +193,8 @@ public class NearbyFragment extends Fragment implements NearbyContract.View
 
         dialogBuilder.setTitle("Post Nearby Message");
         dialogBuilder.setMessage("Enter text below");
-        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                mSearchPresenter.publish(messageEditText.getText().toString());
-            }
-        });
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.dismiss();
-            }
-        });
+        dialogBuilder.setPositiveButton("Done", (dialog, which) -> mSearchPresenter.publish(messageEditText.getText().toString()));
+        dialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         AlertDialog postDialog = dialogBuilder.create();
         postDialog.show();
     }
