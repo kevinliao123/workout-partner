@@ -1,5 +1,7 @@
 package com.fruitguy.workoutpartner.friendlist;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.fruitguy.workoutpartner.R;
+import com.fruitguy.workoutpartner.chat.ChatActivity;
 import com.fruitguy.workoutpartner.constant.FirebaseConstant;
 import com.fruitguy.workoutpartner.data.Friend;
 import com.fruitguy.workoutpartner.data.User;
@@ -35,6 +38,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fruitguy.workoutpartner.constant.FirebaseConstant.FRIEND_IMAGE;
+import static com.fruitguy.workoutpartner.constant.FirebaseConstant.FRIEND_NAME;
 import static com.fruitguy.workoutpartner.constant.FirebaseConstant.FRIEND_USER_ID;
 import static com.fruitguy.workoutpartner.constant.FirebaseConstant.USER_DATABASE;
 import static com.fruitguy.workoutpartner.constant.FirebaseConstant.USER_NAME;
@@ -60,8 +65,13 @@ public class FriendListFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child(USER_DATABASE);
         mUserDatabase.keepSynced(true);
-        setupRecyclerView();
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupRecyclerView();
     }
 
     @Override
@@ -105,9 +115,23 @@ public class FriendListFragment extends Fragment {
                         holder.setUserName(name);
                         holder.setUserStatus(status);
                         holder.mView.setOnClickListener(view -> {
-                            Intent intent = new Intent(getContext(), UserActivity.class);
-                            intent.putExtra(FRIEND_USER_ID, key);
-                            startActivity(intent);
+                            CharSequence[] option = {"Open Profile", "Send Message"};
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                                    .setTitle("Select Options")
+                                    .setItems(option, (dialog, which) -> {
+                                        if (which == 0) {
+                                            Intent intent = new Intent(getContext(), UserActivity.class);
+                                            intent.putExtra(FRIEND_USER_ID, key);
+                                            startActivity(intent);
+                                        } else {
+                                            Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                                            chatIntent.putExtra(FRIEND_USER_ID, key);
+                                            chatIntent.putExtra(FRIEND_NAME, name);
+                                            chatIntent.putExtra(FRIEND_IMAGE, thumb);
+                                            startActivity(chatIntent);
+                                        }
+                                    });
+                            builder.create().show();
                         });
                     }
 

@@ -1,5 +1,7 @@
 package com.fruitguy.workoutpartner.di;
 
+import com.fruitguy.workoutpartner.chat.ChatActivity;
+import com.fruitguy.workoutpartner.chat.ChatModule;
 import com.fruitguy.workoutpartner.profile.ProfileActivity;
 import com.fruitguy.workoutpartner.profile.ProfileModule;
 import com.fruitguy.workoutpartner.user.UserActivity;
@@ -16,4 +18,6 @@ public abstract class ActivityBindingModule {
     @ContributesAndroidInjector(modules = UserModule.class)
     abstract UserActivity userActivity();
 
+    @ContributesAndroidInjector(modules = ChatModule.class)
+    abstract ChatActivity chatActivity();
 }

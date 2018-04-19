@@ -19,7 +19,6 @@ public class UserPresenter implements UserContract.Presenter {
 
     @Override
     public void start() {
-        mRepository.init();
     }
 
     @Override

@@ -19,4 +19,11 @@ public class DataModule {
         , FirebaseDatabase.getInstance().getReference()
         , FirebaseStorage.getInstance().getReference());
     }
+
+    @Provides
+    static ChatRepository provideChatRepository() {
+        return new ChatRepository(FirebaseAuth.getInstance()
+                , FirebaseDatabase.getInstance().getReference()
+                , FirebaseStorage.getInstance().getReference());
+    }
 }

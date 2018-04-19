@@ -65,4 +65,12 @@ public class FirebaseConstant {
     public static final String NOTIFICATION_TYPE = "request";
     public static final String FROM_USER_ID = "from_user_id";
     public static final String FRIEND_USER_ID = "user_id";
+    public static final String FRIEND_NAME = "friend_name";
+    public static final String FRIEND_IMAGE = "friend_image";
+
+    public static final String CHAT = "chat";
+    public static final String MESSAGES_NODE = "messages";
+    public static final String MESSAGE_KEY = "message";
+    public static final String MESSAGE_TYPE = "type";
+    public static final String TIMESTAMP = "timestamp";
 }

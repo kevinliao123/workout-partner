@@ -28,14 +28,15 @@ public class FirebaseRepository {
 
     private static final String TAG = FirebaseRepository.class.getSimpleName();
 
-    private FirebaseAuth mFirebaseAuth;
-    private DatabaseReference mDatabase;
-    private DatabaseReference mCurrentUserDataBase;
+    protected FirebaseAuth mFirebaseAuth;
+    protected DatabaseReference mDatabase;
+    protected DatabaseReference mCurrentUserDataBase;
+    protected FirebaseUser mUser;
+
     private DatabaseReference mFriendRequestDataBase;
     private DatabaseReference mFriendDatabase;
     private DatabaseReference mNotificationDatabase;
     private StorageReference mImageStorage;
-    private FirebaseUser mUser;
     private ValueEventListener mRequestStateListener;
     private ValueEventListener mFriendStateListener;
     private ValueEventListener mUserInfoListener;
@@ -48,6 +49,7 @@ public class FirebaseRepository {
         mFirebaseAuth = firebaseAuth;
         mDatabase = database;
         mImageStorage = storage;
+        init();
     }
 
     public void init() {

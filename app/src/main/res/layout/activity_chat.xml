@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/chat_app_bar"
+        layout="@layout/app_bar_layout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:weightSum="10"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/add_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:src="@drawable/ic_add"
+            android:background="@android:color/white"
+            android:scaleType="fitXY"
+            android:alpha="0.5" />
+
+        <EditText
+            android:id="@+id/chat_message_view"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="7"
+            android:background="@android:color/white"
+            android:ems="10"
+            android:hint="Enter Message..."
+            android:inputType="textPersonName"
+            android:textColor="@android:color/black"
+            android:paddingBottom="12dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="14dp" />
+
+        <ImageButton
+            android:id="@+id/chat_send_btn"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:alpha="0.5"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            android:src="@drawable/ic_send"/>
+    </LinearLayout>
+
+</RelativeLayout>
