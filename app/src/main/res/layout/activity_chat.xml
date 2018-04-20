@@ -1,53 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/chat_app_bar"
         layout="@layout/app_bar_layout" />
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/message_bar"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/chat_app_bar"
+        android:layout_centerVertical="true">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/message_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/general_padding" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
     <LinearLayout
+        android:id="@+id/message_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:weightSum="10"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="10">
 
         <ImageButton
             android:id="@+id/add_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.5"
-            android:src="@drawable/ic_add"
             android:background="@android:color/white"
             android:scaleType="fitXY"
-            android:alpha="0.5" />
+            android:src="@drawable/ic_add" />
 
         <EditText
             android:id="@+id/chat_message_view"
-            android:layout_width="1dp"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="7"
             android:background="@android:color/white"
             android:ems="10"
             android:hint="Enter Message..."
             android:inputType="textPersonName"
-            android:textColor="@android:color/black"
             android:paddingBottom="12dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="14dp" />
+            android:paddingTop="14dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/darker_gray" />
 
         <ImageButton
             android:id="@+id/chat_send_btn"
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_weight="1.5"
-            android:alpha="0.5"
             android:background="@android:color/white"
             android:padding="10dp"
-            android:src="@drawable/ic_send"/>
+            android:src="@drawable/ic_send" />
     </LinearLayout>
 
 </RelativeLayout>

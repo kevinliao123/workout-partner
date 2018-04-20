@@ -13,11 +13,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.fruitguy.workoutpartner.constant.FirebaseConstant.CHAT;
-import static com.fruitguy.workoutpartner.constant.FirebaseConstant.MESSAGES_NODE;
-import static com.fruitguy.workoutpartner.constant.FirebaseConstant.MESSAGE_KEY;
-import static com.fruitguy.workoutpartner.constant.FirebaseConstant.MESSAGE_TYPE;
-import static com.fruitguy.workoutpartner.constant.FirebaseConstant.TIMESTAMP;
+import static com.fruitguy.workoutpartner.constant.FirebaseConstant.*;
 
 public class ChatRepository extends FirebaseRepository {
 
@@ -77,14 +73,15 @@ public class ChatRepository extends FirebaseRepository {
 
     public void sendMessage(String message, String friendUserId, UploadCallBack callback) {
         String currentUserId = mUser.getUid();
-        String currentUserRef = MESSAGES_NODE +"/"+ currentUserId + "/"+ friendUserId;
-        String friendUserRef =  MESSAGES_NODE +"/"+ friendUserId + "/"+ currentUserId;
+        String currentUserRef = currentUserId + "/"+ friendUserId;
+        String friendUserRef =  friendUserId + "/"+ currentUserId;
         String pushId = mMessageRef.child(currentUserId).child(friendUserId).push().getKey();
 
         Map messageMap = new HashMap();
         messageMap.put(MESSAGE_KEY, message);
-        messageMap.put(MESSAGE_TYPE, "text");
+        messageMap.put(MESSAGE_TYPE, TEXT);
         messageMap.put(TIMESTAMP, ServerValue.TIMESTAMP);
+        messageMap.put(FROM, currentUserId);
 
         Map userMap = new HashMap();
         userMap.put(currentUserRef + "/" + pushId, messageMap);

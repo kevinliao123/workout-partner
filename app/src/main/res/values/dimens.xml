@@ -2,6 +2,7 @@
 <resources>
     <!--General-->
     <dimen name="general_padding">16dp</dimen>
+    <dimen name="general_padding_small">8dp</dimen>
     <dimen name="general_margin">16dp</dimen>
     <dimen name="general_margin_medium">24dp</dimen>
     <dimen name="general_margin_large">32dp</dimen>

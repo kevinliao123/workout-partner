@@ -73,9 +73,8 @@ public class FirebaseRepository {
 
         if (mUserInfoListener != null) {
             mCurrentUserDataBase.removeEventListener(mUserInfoListener);
-            getUserDatabaseById(mFriendUserId).removeEventListener(mUserInfoListener);
             if (mFriendUserId != null) {
-                mDatabase.child(mFriendUserId).removeEventListener(mUserInfoListener);
+                getUserDatabaseById(mFriendUserId).removeEventListener(mUserInfoListener);
             }
         }
 

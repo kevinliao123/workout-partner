@@ -72,5 +72,8 @@ public class FirebaseConstant {
     public static final String MESSAGES_NODE = "messages";
     public static final String MESSAGE_KEY = "message";
     public static final String MESSAGE_TYPE = "type";
+    public static final String TEXT = "text";
+    public static final String IMAGE = "image";
+    public static final String FROM = "from";
     public static final String TIMESTAMP = "timestamp";
 }
