@@ -58,6 +58,9 @@
             android:windowSoftInputMode="adjustPan"
             android:parentActivityName=".main.MainActivity"/>
 
+        <activity android:name=".friendlist.FriendListActivity"
+            android:screenOrientation="portrait"/>
+
         <service android:name="services.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>

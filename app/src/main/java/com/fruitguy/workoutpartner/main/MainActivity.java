@@ -14,10 +14,10 @@ import android.view.MenuItem;
 import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.authentication.AuthenticationActivity;
 import com.fruitguy.workoutpartner.conversation.ConvFragment;
+import com.fruitguy.workoutpartner.friendlist.FriendListActivity;
 import com.fruitguy.workoutpartner.search.SearchFragment;
 import com.fruitguy.workoutpartner.nearby.NearbyFragment;
 import com.fruitguy.workoutpartner.profile.ProfileActivity;
-import com.fruitguy.workoutpartner.friendlist.FriendListFragment;
 import com.fruitguy.workoutpartner.util.PermissionUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements MainPageContract.
 
     MainPageContract.Presenter mMainPagePresenter;
 
-    private int[] IconResID = {R.mipmap.ic_chest_bench,R.mipmap.ic_launcher,R.mipmap.ic_add_partner, R.mipmap.ic_launcher_round};
+    private int[] IconResID = {R.string.search,R.string.nearby,R.string.chat};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements MainPageContract.
             case R.id.profile:
                 startActivity(new Intent(this, ProfileActivity.class));
                 return true;
-            case R.id.settings:
+            case R.id.friend_list:
+                startActivity(new Intent(this, FriendListActivity.class));
                 return true;
             case R.id.logout:
                 mMainPagePresenter.signout();
@@ -103,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements MainPageContract.
         list.add(new SearchFragment());
         list.add(new NearbyFragment());
         list.add(new ConvFragment());
-        list.add(new FriendListFragment());
         SectionPageAdapter sectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager(),list);
         mViewPager.setAdapter(sectionPageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements MainPageContract.
 
     public void setTabLayoutIcon(){
         for(int i =0; i < IconResID.length;i++){
-            mTabLayout.getTabAt(i).setIcon(IconResID[i]);
+            mTabLayout.getTabAt(i).setText(IconResID[i]);
         }
 
     }

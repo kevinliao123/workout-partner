@@ -8,14 +8,15 @@
         app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/settings"
-                android:icon="@drawable/ic_rings"
-                android:title="@string/setting" />
-
-            <item
                 android:id="@+id/profile"
                 android:icon="@drawable/ic_chest_bench"
                 android:title="@string/profile" />
+
+            <item
+                android:id="@+id/friend_list"
+                android:icon="@drawable/ic_rings"
+                android:title="@string/friend_list" />
+
 
             <item
                 android:id="@+id/logout"

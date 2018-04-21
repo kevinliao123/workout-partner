@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,7 +43,7 @@ import static com.fruitguy.workoutpartner.constant.FirebaseConstant.USER_THUMB_N
  * Created by heliao on 2/6/18.
  */
 
-public class FriendListFragment extends Fragment {
+public class FriendListActivity extends AppCompatActivity {
     @BindView(R.id.friend_list)
     RecyclerView mFriendList;
 
@@ -51,14 +51,13 @@ public class FriendListFragment extends Fragment {
 
     DatabaseReference mUserDatabase;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_friend_list, container, false);
-        ButterKnife.bind(this, rootView);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_friend_list);
+        ButterKnife.bind(this);
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child(USER_DATABASE);
         mUserDatabase.keepSynced(true);
-        return rootView;
     }
 
     @Override
@@ -74,7 +73,7 @@ public class FriendListFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        mFriendList.setLayoutManager(new LinearLayoutManager(getContext()));
+        mFriendList.setLayoutManager(new LinearLayoutManager(this));
         mFriendList.setHasFixedSize(true);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -104,20 +103,20 @@ public class FriendListFragment extends Fragment {
                         String name = dataSnapshot.child(USER_NAME).getValue().toString();
                         String thumb = dataSnapshot.child(USER_THUMB_NAIL).getValue().toString();
                         String status = dataSnapshot.child(USER_STATUS).getValue().toString();
-                        holder.setImage(getContext(), thumb);
+                        holder.setImage(FriendListActivity.this, thumb);
                         holder.setUserName(name);
                         holder.setUserStatus(status);
                         holder.mView.setOnClickListener(view -> {
                             CharSequence[] option = {"Open Profile", "Send Message"};
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                            AlertDialog.Builder builder = new AlertDialog.Builder(FriendListActivity.this)
                                     .setTitle("Select Options")
                                     .setItems(option, (dialog, which) -> {
                                         if (which == 0) {
-                                            Intent intent = new Intent(getContext(), UserActivity.class);
+                                            Intent intent = new Intent(FriendListActivity.this, UserActivity.class);
                                             intent.putExtra(FRIEND_USER_ID, key);
                                             startActivity(intent);
                                         } else {
-                                            Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                                            Intent chatIntent = new Intent(FriendListActivity.this, ChatActivity.class);
                                             chatIntent.putExtra(FRIEND_USER_ID, key);
                                             chatIntent.putExtra(FRIEND_NAME, name);
                                             chatIntent.putExtra(FRIEND_IMAGE, thumb);

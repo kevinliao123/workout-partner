@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
     <TextView
         android:id="@+id/friend_list_label"
-        android:text="@string/label_friend_list"
+        android:text="@string/friend_list"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_toLeftOf="@+id/friend_list_button"
