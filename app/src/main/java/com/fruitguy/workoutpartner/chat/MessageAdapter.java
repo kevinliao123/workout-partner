@@ -36,32 +36,45 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<ChatMessage, ChatMes
     protected void onBindViewHolder(@NonNull ChatMessageViewHolder holder, int position, @NonNull ChatMessage model) {
 
         if(model.getType().equals(TEXT)) {
-            holder.mUploadedImage.setVisibility(View.INVISIBLE);
+            holder.mUploadedImage.setVisibility(View.GONE);
             holder.mMessage.setVisibility(View.VISIBLE);
             holder.setMessage(model.getMessage());
             if (model.getFrom().equals(mFriendUserId)) {
-                holder.setUserImage(mContext, mFriendThumb);
-                holder.mUserImage.setVisibility(View.VISIBLE);
                 holder.mMessage.setBackground(mContext.getResources().getDrawable(R.drawable.purple_rectangle));
-                RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) holder.mMessage.getLayoutParams();
-                param.addRule(RelativeLayout.RIGHT_OF, R.id.profile_image);
-                param.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                param.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                param.leftMargin = 20;
-                holder.mMessage.setLayoutParams(param);
+                adjustPositionToLeft(holder, holder.mMessage);
             } else {
-                holder.mUserImage.setVisibility(View.GONE);
                 holder.mMessage.setBackground(mContext.getResources().getDrawable(R.drawable.white_rectangle));
-                RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) holder.mMessage.getLayoutParams();
-                param.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                param.rightMargin = 3;
-                holder.mMessage.setLayoutParams(param);
+                adjustPositionToRight(holder, holder.mMessage);
             }
         } else {
             holder.mUploadedImage.setVisibility(View.VISIBLE);
-            holder.mMessage.setVisibility(View.INVISIBLE);
+            holder.mMessage.setVisibility(View.GONE);
             holder.setUploadedImage(mContext, model.message);
+            if (model.getFrom().equals(mFriendUserId)) {
+                adjustPositionToLeft(holder, holder.mUploadedImage);
+            } else {
+                adjustPositionToRight(holder, holder.mUploadedImage);
+            }
         }
+    }
+
+    private void adjustPositionToLeft(ChatMessageViewHolder holder, View target){
+        holder.mUserImage.setVisibility(View.VISIBLE);
+        holder.setUserImage(mContext, mFriendThumb);
+        RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) target.getLayoutParams();
+        param.addRule(RelativeLayout.RIGHT_OF, R.id.profile_image);
+        param.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+        param.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        param.leftMargin = 20;
+        holder.mMessage.setLayoutParams(param);
+    }
+
+    private void adjustPositionToRight(ChatMessageViewHolder holder, View target) {
+        holder.mUserImage.setVisibility(View.GONE);
+        RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) target.getLayoutParams();
+        param.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        param.rightMargin = 3;
+        holder.mMessage.setLayoutParams(param);
     }
 
     @NonNull
