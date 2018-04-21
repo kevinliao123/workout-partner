@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fruitguy.workoutpartner.R;
-import com.fruitguy.workoutpartner.chat.ConvFragment;
+import com.fruitguy.workoutpartner.conversation.ConvFragment;
 import com.fruitguy.workoutpartner.data.UserMessage;
 import com.fruitguy.workoutpartner.util.ImageUtils;
 

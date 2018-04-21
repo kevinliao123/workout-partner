@@ -20,8 +20,8 @@ public class ChatRepository extends FirebaseRepository {
 
     private static final String TAG = ChatRepository.class.getSimpleName();
 
-    private DatabaseReference mChatRef;
-    private DatabaseReference mMessageRef;
+    protected DatabaseReference mChatRef;
+    protected DatabaseReference mMessageRef;
     private String mCurrentUserId;
     private ValueEventListener mChatEventListener;
 
@@ -34,7 +34,9 @@ public class ChatRepository extends FirebaseRepository {
         mCurrentUserId = mUser.getUid();
     }
 
+    @Override
     public void shutdown() {
+        super.shutdown();
         if(mChatEventListener != null) {
             mChatRef.child(mCurrentUserId).removeEventListener(mChatEventListener);
         }
