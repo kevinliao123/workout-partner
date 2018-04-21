@@ -10,7 +10,10 @@ import android.widget.TextView;
 import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.conversation.ConvFragment;
 import com.fruitguy.workoutpartner.data.UserMessage;
+import com.fruitguy.workoutpartner.user.UserActivity;
 import com.fruitguy.workoutpartner.util.ImageUtils;
+
+import static com.fruitguy.workoutpartner.constant.FirebaseConstant.FRIEND_USER_ID;
 
 /**
  * Created by heliao on 1/21/18.
@@ -40,9 +43,9 @@ public class MessageViewHolder extends RecyclerView.ViewHolder implements View.O
     @Override
     public void onClick(View v) {
         Context context = itemView.getContext();
-        Intent chatIntent = new Intent(context, ConvFragment.class);
-        chatIntent.putExtra(context.getString(R.string.token_key), mUserMessage.getUserToken());
-        context.startActivity(chatIntent);
+        Intent intent = new Intent(context, UserActivity.class);
+        intent.putExtra(FRIEND_USER_ID, mUserMessage.getUserToken());
+        context.startActivity(intent);
     }
 
     public void setProfileImage(String imageUrl) {
