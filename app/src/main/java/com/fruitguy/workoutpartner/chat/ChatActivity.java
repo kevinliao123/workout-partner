@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -65,6 +66,9 @@ public class ChatActivity extends DaggerAppCompatActivity implements ChatContrac
 
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
+
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
 
     String mCurrentUserId;
     String mFriendUserId;
@@ -147,6 +151,7 @@ public class ChatActivity extends DaggerAppCompatActivity implements ChatContrac
                 super.onItemRangeInserted(positionStart, itemCount);
                 int friendlyMessageCount = mAdapter.getItemCount();
                     mMessageList.scrollToPosition(friendlyMessageCount-1);
+                    mProgressBar.setVisibility(View.INVISIBLE);
                 }
         };
         mAdapter.registerAdapterDataObserver(mDataObserver);

@@ -67,6 +67,7 @@ public class ConvFragment extends Fragment implements ConvContract.View {
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child(USER_DATABASE);
         mMessageDatabse = FirebaseDatabase.getInstance().getReference().child(MESSAGES_NODE);
         mUserDatabase.keepSynced(true);
+        mMessageDatabse.keepSynced(true);
         setupRecyclerView();
 
         return root;
