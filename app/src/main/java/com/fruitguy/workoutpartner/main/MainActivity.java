@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import com.fruitguy.workoutpartner.R;
 import com.fruitguy.workoutpartner.authentication.AuthenticationActivity;
-import com.fruitguy.workoutpartner.chat.ChatFragment;
+import com.fruitguy.workoutpartner.chat.ConvFragment;
 import com.fruitguy.workoutpartner.search.SearchFragment;
 import com.fruitguy.workoutpartner.nearby.NearbyFragment;
 import com.fruitguy.workoutpartner.profile.ProfileActivity;
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements MainPageContract.
         List<Fragment> list = new ArrayList<>();
         list.add(new SearchFragment());
         list.add(new NearbyFragment());
-        list.add(new ChatFragment());
+        list.add(new ConvFragment());
         list.add(new FriendListFragment());
         SectionPageAdapter sectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager(),list);
         mViewPager.setAdapter(sectionPageAdapter);

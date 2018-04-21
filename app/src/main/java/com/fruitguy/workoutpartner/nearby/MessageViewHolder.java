@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fruitguy.workoutpartner.R;
-import com.fruitguy.workoutpartner.chat.ChatFragment;
+import com.fruitguy.workoutpartner.chat.ConvFragment;
 import com.fruitguy.workoutpartner.data.UserMessage;
 import com.fruitguy.workoutpartner.util.ImageUtils;
 
@@ -40,7 +40,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder implements View.O
     @Override
     public void onClick(View v) {
         Context context = itemView.getContext();
-        Intent chatIntent = new Intent(context, ChatFragment.class);
+        Intent chatIntent = new Intent(context, ConvFragment.class);
         chatIntent.putExtra(context.getString(R.string.token_key), mUserMessage.getUserToken());
         context.startActivity(chatIntent);
     }
