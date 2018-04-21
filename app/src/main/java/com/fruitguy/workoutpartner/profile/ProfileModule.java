@@ -1,7 +1,9 @@
 package com.fruitguy.workoutpartner.profile;
 
 import com.fruitguy.workoutpartner.data.FirebaseRepository;
+import com.fruitguy.workoutpartner.di.ActivityScoped;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
@@ -12,8 +14,7 @@ import dagger.Provides;
 @Module
 public abstract class ProfileModule {
 
-    @Provides
-    static ProfileContract.Presenter provideProfilePresenter(FirebaseRepository firebaseRepository) {
-        return new ProfilePresenter(firebaseRepository);
-    }
+    @ActivityScoped
+    @Binds
+    abstract ProfileContract.Presenter profilePresenter(ProfilePresenter presenter);
 }

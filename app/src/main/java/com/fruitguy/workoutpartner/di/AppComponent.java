@@ -4,7 +4,9 @@ import android.app.Application;
 
 import com.fruitguy.workoutpartner.WorkoutApplication;
 import com.fruitguy.workoutpartner.chat.ChatModule;
+import com.fruitguy.workoutpartner.data.ChatRepository;
 import com.fruitguy.workoutpartner.data.DataModule;
+import com.fruitguy.workoutpartner.data.FirebaseRepository;
 import com.fruitguy.workoutpartner.profile.ProfileModule;
 import com.fruitguy.workoutpartner.user.UserModule;
 
@@ -17,10 +19,8 @@ import dagger.android.support.AndroidSupportInjectionModule;
 
 
 @Singleton
-@Component(modules = {ProfileModule.class
-        , DataModule.class
-        , UserModule.class
-        , ChatModule.class
+@Component(modules = {
+        DataModule.class
         , AppModule.class
         , ActivityBindingModule.class
         , AndroidSupportInjectionModule.class})
