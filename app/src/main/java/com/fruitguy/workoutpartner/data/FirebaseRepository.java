@@ -55,7 +55,6 @@ public class FirebaseRepository {
     public void init() {
         mUser = getCurrentUser();
         mCurrentUserDataBase = getUserDatabaseById(mUser.getUid());
-        mImageStorage = getImageStorage();
         mFriendRequestDataBase = getFriendRequestDatabase();
         mFriendDatabase = getFriendsDatabase();
         mNotificationDatabase = getNotificationDatabase();
@@ -158,23 +157,26 @@ public class FirebaseRepository {
                 });
     }
 
-    public void uploadImage(Uri resultUri, UploadCallBack callBack) {
-        StorageReference filePath = mImageStorage
-                .child(mUser.getUid()+".png");
-        filePath.putFile(resultUri).addOnCompleteListener(task -> {
+    public void uploadImage(UploadImageContainer container) {
+        String imageName = container.getImageName();
+        String storageName = container.getStorageName();
+        UploadCallBack callback = container.getCallback();
+        Uri imageUri = container.getImageUri();
+
+        StorageReference filePath =  mImageStorage.child(storageName)
+                .child(imageName + ".png");
+        filePath.putFile(imageUri).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-                Log.i(TAG, "upload image success");
-                String imageUrl = task.getResult().getDownloadUrl().toString();
-                updateImageUrl(imageUrl, USER_IMAGE);
-                callBack.onSuccess();
+                Uri imageUrl = task.getResult().getDownloadUrl();
+                callback.onSuccess(imageUrl);
             } else {
-                Log.i(TAG, "upload image fail");
+                callback.onFailure();
             }
         });
     }
 
     public void uploadImage(byte[] data, UploadCallBack callBack) {
-        UploadTask uploadTask = mImageStorage.child(mUser.getUid() + ".png").putBytes(data);
+        UploadTask uploadTask = mImageStorage.child(PROFILE_IMAGE_STORAGE).child(mUser.getUid() + ".png").putBytes(data);
         uploadTask.addOnFailureListener((exception) -> Log.e(TAG, exception.getMessage()))
                 .addOnSuccessListener((taskSnapshot) -> {
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
@@ -360,10 +362,12 @@ public class FirebaseRepository {
         mNotificationDatabase.child(friendUserId).push().setValue(map);
     }
 
-    public interface UploadCallBack {
-        void onSuccess();
+    public static abstract class UploadCallBack<T> {
+        public void onSuccess() {}
 
-        void onFailure();
+        public void onSuccess(T data) {}
+
+        public void onFailure() {}
     }
 
     public interface DataChangeCallBack<T> {
@@ -376,5 +380,36 @@ public class FirebaseRepository {
         void onSent();
 
         void onFriend();
+    }
+
+    public static class UploadImageContainer {
+        Uri imageUri;
+        String imageName;
+        String storageName;
+
+        public UploadImageContainer(Uri imageUri, String imageName, String storageName, UploadCallBack callback) {
+            this.imageUri = imageUri;
+            this.imageName = imageName;
+            this.storageName = storageName;
+            this.callback = callback;
+        }
+
+        public Uri getImageUri() {
+            return imageUri;
+        }
+
+        public String getImageName() {
+            return imageName;
+        }
+
+        public String getStorageName() {
+            return storageName;
+        }
+
+        public UploadCallBack getCallback() {
+            return callback;
+        }
+
+        UploadCallBack callback;
     }
 }

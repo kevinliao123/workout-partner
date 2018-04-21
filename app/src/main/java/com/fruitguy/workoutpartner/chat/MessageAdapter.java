@@ -36,6 +36,8 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<ChatMessage, ChatMes
     protected void onBindViewHolder(@NonNull ChatMessageViewHolder holder, int position, @NonNull ChatMessage model) {
 
         if(model.getType().equals(TEXT)) {
+            holder.mUploadedImage.setVisibility(View.INVISIBLE);
+            holder.mMessage.setVisibility(View.VISIBLE);
             holder.setMessage(model.getMessage());
             if (model.getFrom().equals(mFriendUserId)) {
                 holder.setUserImage(mContext, mFriendThumb);
@@ -56,7 +58,9 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<ChatMessage, ChatMes
                 holder.mMessage.setLayoutParams(param);
             }
         } else {
-
+            holder.mUploadedImage.setVisibility(View.VISIBLE);
+            holder.mMessage.setVisibility(View.INVISIBLE);
+            holder.setUploadedImage(mContext, model.message);
         }
     }
 

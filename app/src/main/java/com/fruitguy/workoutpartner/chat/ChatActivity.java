@@ -1,5 +1,7 @@
 package com.fruitguy.workoutpartner.chat;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -38,6 +40,7 @@ public class ChatActivity extends DaggerAppCompatActivity implements ChatContrac
 
     private static final String TAG = ChatActivity.class.getSimpleName();
     private static final int TOTAL_ITEM_TO_LOAD = 10;
+    private static final int GALLERY_PICK = 1;
 
     @BindView(R.id.chat_app_bar)
     Toolbar mToolbar;
@@ -166,6 +169,15 @@ public class ChatActivity extends DaggerAppCompatActivity implements ChatContrac
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
+            Uri imageUri = data.getData();
+            mPresenter.sendImageMessage(imageUri, mFriendUserId);
+        }
+    }
+
+    @Override
     public void setPresenter(ChatContract.Presenter presenter) {
 
     }
@@ -179,6 +191,14 @@ public class ChatActivity extends DaggerAppCompatActivity implements ChatContrac
     public void onSendButtonClicked(View view) {
         String message = mMessage.getText().toString();
         mPresenter.sendMessage(message, mFriendUserId);
+    }
+
+    @OnClick(R.id.add_button)
+    public void onAddButtonClicked(View view) {
+        Intent galleryIntent = new Intent();
+        galleryIntent.setType("image/*");
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
     }
 
     @OnFocusChange(R.id.chat_message_view)

@@ -76,4 +76,6 @@ public class FirebaseConstant {
     public static final String IMAGE = "image";
     public static final String FROM = "from";
     public static final String TIMESTAMP = "timestamp";
+
+    public static final String CHAT_IMAGE_STORAGE = "chat_images";
 }

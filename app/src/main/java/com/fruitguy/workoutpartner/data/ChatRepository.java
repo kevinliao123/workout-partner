@@ -1,5 +1,6 @@
 package com.fruitguy.workoutpartner.data;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -72,20 +73,24 @@ public class ChatRepository extends FirebaseRepository {
     }
 
     public void sendMessage(String message, String friendUserId, UploadCallBack callback) {
+        Map messageMap = generateTextMessageMap(message);
+        String pushId = getChatMessagePushId(friendUserId);
+        uploadMessage(friendUserId, pushId, messageMap, callback);
+    }
+
+    public void sendMessage(Uri image, String friendUserId, UploadCallBack callback) {
+        Map messageMap = generateImageMessageMap(image);
+        String pushId = getChatMessagePushId(friendUserId);
+        uploadMessage(friendUserId, pushId, messageMap, callback);
+    }
+
+    public void uploadMessage(String friendUserId, String pushId, Map data, UploadCallBack callback) {
         String currentUserId = mUser.getUid();
         String currentUserRef = currentUserId + "/"+ friendUserId;
         String friendUserRef =  friendUserId + "/"+ currentUserId;
-        String pushId = mMessageRef.child(currentUserId).child(friendUserId).push().getKey();
-
-        Map messageMap = new HashMap();
-        messageMap.put(MESSAGE_KEY, message);
-        messageMap.put(MESSAGE_TYPE, TEXT);
-        messageMap.put(TIMESTAMP, ServerValue.TIMESTAMP);
-        messageMap.put(FROM, currentUserId);
-
         Map userMap = new HashMap();
-        userMap.put(currentUserRef + "/" + pushId, messageMap);
-        userMap.put(friendUserRef + "/" + pushId, messageMap);
+        userMap.put(currentUserRef + "/" + pushId, data);
+        userMap.put(friendUserRef + "/" + pushId, data);
 
         mMessageRef.updateChildren(userMap, (databaseError, databaseReference) ->{
             if(databaseError != null) {
@@ -95,7 +100,31 @@ public class ChatRepository extends FirebaseRepository {
                 callback.onSuccess();
             }
         });
+    }
 
+    private Map generateTextMessageMap(String message) {
+        Map messageMap = new HashMap();
+        messageMap.put(MESSAGE_KEY, message);
+        messageMap.put(MESSAGE_TYPE, TEXT);
+        messageMap.put(TIMESTAMP, ServerValue.TIMESTAMP);
+        messageMap.put(FROM, mUser.getUid());
+
+        return messageMap;
+    }
+
+    private Map generateImageMessageMap(Uri image) {
+        Map messageMap = new HashMap();
+        messageMap.put(MESSAGE_KEY, image.toString());
+        messageMap.put(MESSAGE_TYPE, IMAGE);
+        messageMap.put(TIMESTAMP, ServerValue.TIMESTAMP);
+        messageMap.put(FROM, mUser.getUid());
+
+        return messageMap;
+    }
+
+    public String getChatMessagePushId(String friendUserId) {
+        String currentUserId = mUser.getUid();
+        return mMessageRef.child(currentUserId).child(friendUserId).push().getKey();
     }
 
 

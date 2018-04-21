@@ -15,6 +15,8 @@ import javax.inject.Inject;
 import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
+import static com.fruitguy.workoutpartner.constant.FirebaseConstant.PROFILE_IMAGE_STORAGE;
+import static com.fruitguy.workoutpartner.constant.FirebaseConstant.USER_IMAGE;
 
 /**
  * Created by heliao on 2/21/18.
@@ -75,16 +77,24 @@ public class ProfilePresenter implements ProfileContract.Presenter {
 
     @Override
     public void uploadImageByUri(Uri uri) {
-        mFirebaseRepo.uploadImage(uri, new FirebaseRepository.UploadCallBack() {
+        String userId = mFirebaseRepo.getCurrentUser().getUid();
+        FirebaseRepository.UploadCallBack callback = new FirebaseRepository.UploadCallBack() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(Object data) {
+                if(data instanceof Uri) {
+                    String imageUrl = data.toString();
+                    mFirebaseRepo.updateImageUrl(imageUrl, USER_IMAGE);
+                }
             }
 
             @Override
             public void onFailure() {
                 mView.showSnackBar("Upload Failed");
             }
-        });
+        };
+        FirebaseRepository.UploadImageContainer container
+                = new FirebaseRepository.UploadImageContainer(uri, userId, PROFILE_IMAGE_STORAGE, callback);
+        mFirebaseRepo.uploadImage(container);
     }
 
     @Override
