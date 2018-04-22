@@ -8,8 +8,8 @@ android {
         applicationId "com.fruitguy.workoutpartner"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName rootProject.ext.versionName
+        versionCode 3
+        versionName "1.0.3"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
