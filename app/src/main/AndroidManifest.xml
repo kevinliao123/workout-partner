@@ -55,7 +55,6 @@
         </activity>
 
         <activity android:name=".chat.ChatActivity"
-            android:windowSoftInputMode="adjustPan"
             android:parentActivityName=".main.MainActivity"/>
 
         <activity android:name=".friendlist.FriendListActivity"
