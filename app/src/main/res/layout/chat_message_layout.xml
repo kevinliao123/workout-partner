@@ -22,7 +22,7 @@
         android:padding="@dimen/general_padding_small"
         android:layout_marginStart="@dimen/general_margin"
         android:layout_toEndOf="@id/profile_image"
-        android:background="@drawable/white_rectangle"
+        android:background="@drawable/user_chat_rectangle"
         android:textSize="18sp"
         android:textColor="@android:color/black"
         android:textIsSelectable="false"/>
