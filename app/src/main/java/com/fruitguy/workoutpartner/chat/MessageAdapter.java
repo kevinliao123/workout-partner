@@ -40,10 +40,10 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<ChatMessage, ChatMes
             holder.mMessage.setVisibility(View.VISIBLE);
             holder.setMessage(model.getMessage());
             if (model.getFrom().equals(mFriendUserId)) {
-                holder.mMessage.setBackground(mContext.getResources().getDrawable(R.drawable.purple_rectangle));
+                holder.mMessage.setBackground(mContext.getResources().getDrawable(R.drawable.friend_chat_rectangle));
                 adjustPositionToLeft(holder, holder.mMessage);
             } else {
-                holder.mMessage.setBackground(mContext.getResources().getDrawable(R.drawable.white_rectangle));
+                holder.mMessage.setBackground(mContext.getResources().getDrawable(R.drawable.user_chat_rectangle));
                 adjustPositionToRight(holder, holder.mMessage);
             }
         } else {
