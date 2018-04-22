@@ -2,6 +2,7 @@ package com.fruitguy.workoutpartner.nearby;
 
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.fruitguy.workoutpartner.data.UserMessage;
 import com.google.firebase.auth.FirebaseUser;
@@ -11,6 +12,9 @@ import com.google.firebase.auth.FirebaseUser;
  */
 
 public class NearbyPresenter implements NearbyContract.Presenter, NearbyInteractor.SearchCallBack {
+    
+    private static final String TAG = NearbyPresenter.class.getSimpleName();
+    
     private FirebaseUser mCurrentUser;
     private NearbyInteractor mSearchInteractor;
     private NearbyContract.View mView;
@@ -56,7 +60,10 @@ public class NearbyPresenter implements NearbyContract.Presenter, NearbyInteract
 
     @Override
     public void unsubscribe() {
+        mSearchInteractor.unsubscribe();
         mView.setSubscribeSwitch(false);
+        mView.enableSwitch(true);
+
 
     }
 
@@ -69,34 +76,42 @@ public class NearbyPresenter implements NearbyContract.Presenter, NearbyInteract
 
     @Override
     public void onSubscribeSuccess() {
-
+        Log.i(TAG, "onSubscribeSuccess: ");
+        mView.enableSwitch(true);
     }
 
     @Override
     public void onSubscribeFailed() {
+        Log.i(TAG, "onSubscribeFailed: ");
         mView.showSnackbar("No longer subscribing");
         mView.setSubscribeSwitch(false);
+        mView.enableSwitch(true);
     }
 
     @Override
     public void onSubscribeExpired() {
+        Log.i(TAG, "onSubscribeExpired: ");
         mView.showSnackbar("Could not subscribe");
         mView.setSubscribeSwitch(false);
+        mView.enableSwitch(true);
     }
 
     @Override
     public void onPublishSuccess(UserMessage message) {
+        Log.i(TAG, "onPublishSuccess: ");
         mView.addToMessageList(message);
         mView.refreshMessage();
     }
 
     @Override
     public void onPublishFailed() {
+        Log.i(TAG, "onPublishFailed: ");
         mView.showSnackbar("No longer publishing");
     }
 
     @Override
     public void onPublishExpired() {
+        Log.i(TAG, "onPublishExpired: ");
         mView.showSnackbar("Could not publish,");
     }
 

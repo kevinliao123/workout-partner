@@ -27,6 +27,8 @@ public interface NearbyContract {
 
         void setSubscribeSwitch(boolean value);
 
+        void enableSwitch(boolean value);
+
         void addToMessageList(UserMessage message);
 
         void removeFromMessageList(UserMessage message);

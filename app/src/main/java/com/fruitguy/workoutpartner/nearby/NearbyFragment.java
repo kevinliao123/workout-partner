@@ -101,6 +101,7 @@ public class NearbyFragment extends Fragment implements NearbyContract.View
 
     @OnCheckedChanged(R.id.subscribe_switch)
     public void onSubscribeSwitchCheckedChange(CompoundButton buttonView, boolean isChecked) {
+        enableSwitch(false);
         if (isChecked) {
             mSearchPresenter.subscribe();
         } else {
@@ -141,6 +142,11 @@ public class NearbyFragment extends Fragment implements NearbyContract.View
     @Override
     public void setSubscribeSwitch(boolean value) {
         mSubscribeSwitch.setChecked(value);
+    }
+
+    @Override
+    public void enableSwitch(boolean value) {
+        mSubscribeSwitch.setEnabled(value);
     }
 
     @Override

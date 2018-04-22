@@ -38,7 +38,6 @@ public class NearbyMessageHandler implements NearbyInteractor {
     private List<Message> mMessageList = new ArrayList<>();
 
     private NearbyMessageHandler(GoogleApiClient googleApiClient) {
-        checkNotNull(googleApiClient);
         mGoogleApiClient = googleApiClient;
     }
 
@@ -94,6 +93,7 @@ public class NearbyMessageHandler implements NearbyInteractor {
                     public void onResult(@NonNull Status status) {
                         if (status.isSuccess()) {
                             Log.i(TAG, "Subscribed successfully.");
+                            callback.onSubscribeSuccess();
                         } else {
                             Log.i(TAG, "Could not subscribe, status = " + status);
                             callback.onSubscribeFailed();
