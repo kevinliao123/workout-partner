@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "326159348634-s82v418g8206n2murnm4nrfahdjrcm10.apps.googleusercontent.com",
+          "client_id": "326159348634-0dq2hbuuertb4tj7orm3q407fmbden0v.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.fruitguy.workoutpartner",
-            "certificate_hash": "4cd052f2bc6b74e1b89a99d728f1c70ed8ba2ca1"
+            "certificate_hash": "a0e6521331db4a7cf01ca2551de0d2c46a8e7455"
           }
         },
         {
@@ -62,11 +62,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "326159348634-k25q8a9t4rfk4tqgjts2t4h4b6ll0qvh.apps.googleusercontent.com",
+          "client_id": "326159348634-frl676nc037n3h721pbtapi1jjub3btf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.fruitguy.workoutpartner.debug",
-            "certificate_hash": "4cd052f2bc6b74e1b89a99d728f1c70ed8ba2ca1"
+            "certificate_hash": "31c5f57a1de32c9c8512bb7700a99b7651a95dcc"
           }
         },
         {
